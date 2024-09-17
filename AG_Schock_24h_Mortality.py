@@ -3,36 +3,6 @@ import streamlit as st
 import subprocess
 import sys
 
-# List of libraries to check
-libraries = [
-    'streamlit',
-    'dice_ml',
-    'pandas',
-    #'pickle5',  # pickle5 is often used for compatibility in some cases
-    'numpy',
-    'matplotlib',
-    'xgboost',
-    'shap',
-    'PyPDF2',
-    'zipfile',
-
-
-
-]
-
-def install(package):
-    if package == 'dice_ml':
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-deps", package])
-    else:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-for lib in libraries:
-    try:
-        __import__(lib)
-        print(f'{lib} is already installed.')
-    except ImportError:
-        print(f'{lib} is not installed. Installing...')
-        install(lib)
 
 import pandas as pd
 import pickle
