@@ -1,5 +1,5 @@
 dice-ml
-pandas
+pandas==2.2.2
 numpy
 matplotlib
 xgboost
