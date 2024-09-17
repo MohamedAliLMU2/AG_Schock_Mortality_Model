@@ -2,5 +2,5 @@ pandas
 numpy
 matplotlib
 xgboost
-dice-ml
+dice-ml --no-deps
 shap
