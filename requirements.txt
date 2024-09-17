@@ -4,3 +4,4 @@ numpy
 matplotlib
 xgboost
 shap
+PyPDF2
