@@ -1,6 +1,6 @@
+dice-ml
 pandas
 numpy
 matplotlib
 xgboost
-dice-ml --no-deps
 shap
