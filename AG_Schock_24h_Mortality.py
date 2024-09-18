@@ -874,14 +874,14 @@ if uploaded_file is not None:
                             changed_values_df = counterfactuals_df[differences]
 
                             # Zeige die geänderten Werte
-                            st.write("Geänderte Werte:")
+                            st.write("Values to change:")
                             st.write(changed_values_df)
                             
                             
                         else:
-                            st.error("Bitte wählen Sie mindestens ein Feature zum Ändern aus.")
+                            st.error("Choose at least one feature to change!")
             else:
-                st.error("Bitte berechnen Sie zuerst die Weighted Means!")
+                st.error("Please, calculate firstly weighted means!")
                     
                 
 
