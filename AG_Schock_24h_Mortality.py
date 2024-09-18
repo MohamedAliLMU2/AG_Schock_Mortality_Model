@@ -364,34 +364,37 @@ if uploaded_file is not None:
             # Überprüfen, ob die 'Time'-Zeile vorhanden ist
             if 'Time' not in df.index:
                 raise KeyError("'Time'-row is not in the DataFrame.")
-
+        
             # Zeitstempel extrahieren
             times = df.loc['Time'].values
             # Entfernen der 'Time'-Zeile aus dem DataFrame
             df = df.drop(index='Time')
             
             weighted_means = {}
-
+        
             # Durch alle Features (Zeilen) iterieren
             for feature in df.index:
                 # Datenbereinigung und Umwandlung in numerische Werte
                 values = pd.to_numeric(df.loc[feature], errors='coerce')  # Umwandlung und Ersetzung von Fehlern durch NaN
-
+        
                 # Zeitstempel ohne NaN-Werte
                 times_non_nan = times[~values.isna()]
                 values_non_nan = values.dropna()  # Entferne NaN-Werte
                 
-                if len(values_non_nan) == len(times_non_nan):
+                if len(values_non_nan) > 0 and len(times_non_nan) > 0 and len(values_non_nan) == len(times_non_nan):
                     # Berechnung des gewichteten Mittelwerts, ignoriert NaN-Werte
                     weighted_mean = np.mean(values_non_nan)  # Berechnung des Mittelwerts ohne NaNs
                     weighted_means[feature] = weighted_mean
                 else:
-                    weighted_means[feature] = None  # Falls die Anzahl der Werte und Zeiten nicht übereinstimmt
-
+                    weighted_means[feature] = np.nan  # Wenn es nicht genug Daten gibt, NaN zurückgeben
+        
             # In eine Tabelle umwandeln (DataFrame)
             result_df = pd.DataFrame(weighted_means, index=['WeightedMean']).transpose()
             
             return result_df
+
+
+
 
 
 
@@ -426,7 +429,7 @@ if uploaded_file is not None:
             # Frage nach weiteren Dateien
             more_files = st.radio("Do you want to upload more data?", ("Yes", "No"))
             if more_files == "Yes":
-                uploaded_file2 = st.file_uploader("Laden Sie noch eine Excel- oder PDF-Datei hoch, um die Werte zu laden", type=['xlsx', 'pdf'])
+                uploaded_file2 = st.file_uploader("Please upload a PDF or Excel file", type=['xlsx', 'pdf'])
 
                 if uploaded_file2:
                     if uploaded_file2.name.endswith('.xlsx'):
@@ -434,7 +437,7 @@ if uploaded_file is not None:
                         text = df
                     elif uploaded_file2.name.endswith('.pdf'):
                         text = process_pdf(uploaded_file2)
-                    st.write(text)
+                    #st.write(text)
                     extracted_df = text_extraction(text, synonyms)
                     max_col_number = max([int(col) for col in st.session_state['values'].columns])
                     new_columns = {col: str(max_col_number + i + 1) for i, col in enumerate(extracted_df.T.columns)}
