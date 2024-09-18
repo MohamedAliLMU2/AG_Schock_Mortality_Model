@@ -45,7 +45,7 @@ uploaded_file = st.file_uploader("Please upload a ZIP file with models", type="z
 
 # Check if a file was uploaded
 if uploaded_file is not None:
-    # Read the uploaded ZIP file as a byte stream
+    # Read the uploaded ZIP file as a byte stream            
     with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
         # Load each model directly from the zip file into memory
         with zip_ref.open('pca_model_1.pkl') as file:
@@ -66,7 +66,7 @@ if uploaded_file is not None:
         with zip_ref.open('pca_model_exp2.pkl') as file:
             exp2 = pickle.load(file)
 
-    st.write("Models loaded successfully!")
+    st.success("Models loaded successfully!")
     
         
     class model_24h_mortality:
