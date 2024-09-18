@@ -46,27 +46,37 @@ uploaded_file = st.file_uploader("Please upload a ZIP file with models", type="z
 # Check if a file was uploaded
 if uploaded_file is not None:
     # Read the uploaded ZIP file as a byte stream            
-    with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
-        # Load each model directly from the zip file into memory
-        with zip_ref.open('pca_model_1.pkl') as file:
-            t_model = pickle.load(file)
-        
-        with zip_ref.open('pca_model_2.pkl') as file:
-            cohort1_model = pickle.load(file)
-
-        with zip_ref.open('pca_scaler.pkl') as file:
-            scaler = pickle.load(file)
-
-        with zip_ref.open('pca_model_cohrot_2.pkl') as file:
-            cohort2_model = pickle.load(file)
-
-        with zip_ref.open('pca_model_exp1.pkl') as file:
-            exp1 = pickle.load(file)
-
-        with zip_ref.open('pca_model_exp2.pkl') as file:
-            exp2 = pickle.load(file)
-
-    st.success("Models loaded successfully!")
+    try:
+        with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
+            # Load each model directly from the zip file into memory
+            with zip_ref.open('pca_model_1.pkl') as file:
+                t_model = pickle.load(file)
+            
+            with zip_ref.open('pca_model_2.pkl') as file:
+                cohort1_model = pickle.load(file)
+    
+            with zip_ref.open('pca_scaler.pkl') as file:
+                scaler = pickle.load(file)
+    
+            with zip_ref.open('pca_model_cohort_2.pkl') as file:  # corrected typo
+                cohort2_model = pickle.load(file)
+    
+            with zip_ref.open('pca_model_exp1.pkl') as file:
+                exp1 = pickle.load(file)
+    
+            with zip_ref.open('pca_model_exp2.pkl') as file:
+                exp2 = pickle.load(file)
+    
+        st.success("Models loaded successfully!")
+    
+    except FileNotFoundError as e:
+        st.error(f"File not found: {e}")
+    except pickle.UnpicklingError:
+        st.error("Error unpickling one of the files. Make sure they are valid pickle files.")
+    except zipfile.BadZipFile:
+        st.error("The uploaded file is not a valid zip file.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
     
         
     class model_24h_mortality:
@@ -353,7 +363,7 @@ if uploaded_file is not None:
         def calculate_weighted_means(df):
             # Überprüfen, ob die 'Time'-Zeile vorhanden ist
             if 'Time' not in df.index:
-                raise KeyError("Die 'Time'-Zeile fehlt im DataFrame.")
+                raise KeyError("'Time'-row is not in the DataFrame.")
 
             # Zeitstempel extrahieren
             times = df.loc['Time'].values
@@ -389,7 +399,7 @@ if uploaded_file is not None:
         #if st.button("Data input as PDF / Excel"):
 
             # Datei-Upload-Optionen
-        uploaded_file = st.file_uploader("Laden Sie eine Excel- oder PDF-Datei hoch, um die Werte zu laden", type=['xlsx', 'pdf'])
+        uploaded_file = st.file_uploader("Please upload a PDF or Excel file", type=['xlsx', 'pdf'])
 
             # Initialisiere die Session-State-Variable, um Daten zu speichern
         #if 'weighted_means' not in st.session_state:
@@ -414,8 +424,8 @@ if uploaded_file is not None:
             
 
             # Frage nach weiteren Dateien
-            more_files = st.radio("Möchten Sie weitere Dateien hochladen?", ("Ja", "Nein"))
-            if more_files == "Ja":
+            more_files = st.radio("Do you want to upload more data?", ("Yes", "No"))
+            if more_files == "Yes":
                 uploaded_file2 = st.file_uploader("Laden Sie noch eine Excel- oder PDF-Datei hoch, um die Werte zu laden", type=['xlsx', 'pdf'])
 
                 if uploaded_file2:
@@ -528,7 +538,7 @@ if uploaded_file is not None:
                         st.session_state['data_formatted'] = True
 
 
-            if more_files == "Nein":
+            if more_files == "No":
                     Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
                     if Input_modify == "yes": 
                     
@@ -659,7 +669,7 @@ if uploaded_file is not None:
         input_data = pd.DataFrame(np.nan, index=[feature_names[f] for f in feature_names], columns=hours)
 
         # Erster Teil der Features: Einfache Eingabefelder
-        st.write("Bitte geben Sie die Werte für die folgenden Features ein:")
+        st.write("Please enter the values for the following features:")
 
         age = st.number_input("AgeOnInclusion", min_value=0, max_value=120, value=30)
         height = st.number_input("Height (cm)", min_value=100, max_value=250, value=170)
@@ -667,7 +677,7 @@ if uploaded_file is not None:
         day_number = st.number_input("Day Number on the Intensive Care Unit", min_value=0, max_value=30, value=1)
 
         # Zweiter Teil: Tabelle für stündliche Werteingabe
-        st.write("Bitte geben Sie die stündlichen Werte für die folgenden Features ein:")
+        st.write("Please enter the hourly values for the following features:")
 
         # Interaktive Eingabetabelle anzeigen
         input_table = st.data_editor(input_data, num_rows="dynamic")
@@ -726,7 +736,7 @@ if uploaded_file is not None:
         weighted_means_df = weighted_means_df[col_names]
 
         # Ergebnis für das Modell vorbereiten
-        st.write("Berechnete Werte, die ans Modell geschickt werden:")
+        st.write("Calculated values to be sent to the model:")
         st.write(weighted_means_df.T)
 
         # Speichern in Session State
@@ -759,7 +769,7 @@ if uploaded_file is not None:
                 st.write("**Cohort 1** corresponds to predictions with **high accuracy**.")
                 st.write("**Cohort 2** corresponds to predictions with **lower accuracy**.")
             else:
-                st.error("Bitte berechnen Sie zuerst die Weighted Means!")
+                st.error("Please calculate the Weighted Means first!")
                     
         if  st.button("SHAP explanations"):
                     
