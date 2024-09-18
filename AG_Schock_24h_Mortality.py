@@ -293,29 +293,7 @@ if uploaded_file is not None:
             
             return text
 
-        from openpyxl import load_workbook
-        
-        def process_excel(file):
-            # Lade das Excel-Dokument
-            wb = load_workbook(file)
-            sheet = wb.active  # Wähle das aktive Arbeitsblatt
-        
-            data = []
-        
-            # Iteriere über alle Zeilen im aktiven Arbeitsblatt
-            for row in sheet.iter_rows(values_only=True):
-                # Überspringe vollständig leere Zeilen
-                if any(cell is not None for cell in row):
-                    data.append([cell if cell is not None else '' for cell in row])
-        
-            # Entferne leere Spalten
-            data = [list(col) for col in zip(*data) if any(cell != '' for cell in col)]
-            data = [list(row) for row in zip(*data)]  # Drehe wieder zurück
-        
-            # Erstelle den Text als eine Tabelle mit Tabulatortrennzeichen
-            text = '\n'.join('\t'.join(map(str, row)) for row in data)
-        
-            return text
+
 
 
         # Funktion zur Verarbeitung der hochgeladenen PDF-Datei
