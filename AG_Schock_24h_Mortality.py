@@ -58,7 +58,7 @@ if uploaded_file is not None:
             with zip_ref.open('pca_scaler.pkl') as file:
                 scaler = pickle.load(file)
     
-            with zip_ref.open('pca_model_cohort_2.pkl') as file:  # corrected typo
+            with zip_ref.open('pca_model_cohrot_2.pkl') as file:  # corrected typo
                 cohort2_model = pickle.load(file)
     
             with zip_ref.open('pca_model_exp1.pkl') as file:
