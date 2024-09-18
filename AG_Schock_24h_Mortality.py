@@ -429,7 +429,7 @@ if uploaded_file is not None:
             # Frage nach weiteren Dateien
             more_files = st.radio("Do you want to upload more data?", ("Yes", "No"))
             if more_files == "Yes":
-                uploaded_file2 = st.file_uploader("Please upload a PDF or Excel file", type=['xlsx', 'pdf'])
+                uploaded_file2 = st.file_uploader("Please upload a PDF or an Excel file", type=['xlsx', 'pdf'])
 
                 if uploaded_file2:
                     if uploaded_file2.name.endswith('.xlsx'):
