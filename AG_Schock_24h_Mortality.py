@@ -835,7 +835,7 @@ if uploaded_file is not None:
                 
 
                 # Benutzer wählt die Features aus, die er ändern möchte
-                st.write("Wählen Sie die Features aus, die Sie ändern möchten:")
+                st.write("Select the features you want to modify:")
                 selected_columns = st.multiselect("Features", options=col)
 
                 if selected_columns:
@@ -843,14 +843,14 @@ if uploaded_file is not None:
                     # Benutzer gibt den Bereich für jedes ausgewählte Feature ein
                     for feature in selected_columns:
                         min_val, max_val = st.slider(
-                            f"Wähle den Bereich für {feature}",
+                            f"Choose the range for {feature}",
                             min_value=float(permitted_range[feature][0]),
                             max_value=float(permitted_range[feature][1]),
                             value=(float(permitted_range[feature][0]), float(permitted_range[feature][1]))
                         )
                         user_permitted_range[feature] = [min_val, max_val]
                         
-                    total_CFs = st.number_input("Wie viele Counterfactuals möchten Sie generieren?", min_value=1, value=5, step=1)
+                    total_CFs = st.number_input("How many counterfactuals would you like to generate?", min_value=1, value=5, step=1)
                 
                     # Counterfactuals generieren, wenn Features ausgewählt wurden
                     
