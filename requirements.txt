@@ -6,3 +6,4 @@ xgboost
 shap
 PyPDF2
 ipython
+openpyxl
