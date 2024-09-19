@@ -66,6 +66,25 @@ if uploaded_file is not None:
     
             with zip_ref.open('pca_model_exp2.pkl') as file:
                 exp2 = pickle.load(file)
+                
+                
+            with zip_ref.open('pca_model_1_3d.pkl') as file:
+                t_model_3d = pickle.load(file)
+            
+            with zip_ref.open('pca_model_2_3d.pkl') as file:
+                cohort1_model_3d = pickle.load(file)
+    
+            with zip_ref.open('pca_scaler_3d.pkl') as file:
+                scaler_3d = pickle.load(file)
+    
+            with zip_ref.open('pca_model_cohrot_2_3d.pkl') as file:  # corrected typo
+                cohort2_model_3d = pickle.load(file)
+    
+            with zip_ref.open('pca_model_exp1_3d.pkl') as file:
+                exp1_3d = pickle.load(file)
+    
+            with zip_ref.open('pca_model_exp2_3d.pkl') as file:
+                exp2_3d = pickle.load(file)
     
         st.success("Models loaded successfully!")
     
@@ -80,15 +99,26 @@ if uploaded_file is not None:
     
         
     class model_24h_mortality:
-        def __init__(self, t_model=t_model, cohort1_model=cohort1_model, scaler=scaler, cohort2_model=cohort2_model, exp_dice1=exp1, exp_dice2=exp2):
+        def __init__(self, t_model=t_model, cohort1_model=cohort1_model, scaler=scaler, cohort2_model=cohort2_model, exp_dice1=exp1, exp_dice2=exp2,
+                     t_model_3d=t_model_3d, cohort1_model_3d=cohort1_model_3d, scaler_3d=scaler_3d, cohort2_model_3d=cohort2_model_3d, exp_dice1_3d=exp1_3d, exp_dice2_3d=exp2_3d):
             self.t_model = t_model
             self.cohort1_model = cohort1_model
             self.scaler = scaler
             self.cohort2_model = cohort2_model
             self.exp1 = exp_dice1
             self.exp2 = exp_dice2
+            
+            self.t_model_3d = t_model_3d
+            self.cohort1_model_3d = cohort1_model_3d
+            self.scaler_3d = scaler_3d
+            self.cohort2_model_3d = cohort2_model_3d
+            self.exp1_3d = exp_dice1_3d
+            self.exp2_3d = exp_dice2_3d
 
         def predict(self, X_test_full):
+            
+            
+            st.write('### 24hours-Mortality Prediction')
 
 
 
@@ -101,7 +131,7 @@ if uploaded_file is not None:
             y_pred_t_model = pd.Series(y_pred_t_model)
             y_pred_t_model.index = X_test_full.index
             
-            print(y_pred_t_model)
+            #print(y_pred_t_model)
             
             
             for index, pred in enumerate(y_pred_t_model):
@@ -111,7 +141,9 @@ if uploaded_file is not None:
 
                     st.write("The patient belongs to: Cohort ", int(1))
                     st.write("Mortality prediction for the next day:", y_pred[0])
-
+                    
+                    y_pred_proba = self.cohort1_model.predict_proba(X_test_full)[:, 1]
+                    st.write("Mortality probability  for the next day:", y_pred_proba[0])
 
 
                 if pred == 1:
@@ -119,37 +151,49 @@ if uploaded_file is not None:
 
                     st.write("The patient belongs to: Cohort ", int(2))
                     st.write("Mortality prediction for the next day:", y_pred[0])
-
-            return y_pred
-
-        def predict_proba(self, X_test_full):
-            
-            df = self.scaler.transform(X_test_full)
+                    
+                    y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
+                    st.write("Mortality probability  for the next day:", y_pred_proba[0])
+                    
+                    
+            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+                    
+            st.write('### 3days-Mortality Prediction')
+                    
+            df = self.scaler_3d.transform(X_test_full)
             df = pd.DataFrame(df, columns=['PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
                                             'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
                                             'PC21', 'PC22'])
 
-            y_pred_t_model = self.t_model.predict(df)
+            y_pred_t_model = self.t_model_3d.predict(df)
             y_pred_t_model = pd.Series(y_pred_t_model)
             y_pred_t_model.index = X_test_full.index
-
-
+            
+            #print(y_pred_t_model)
+            
             
             for index, pred in enumerate(y_pred_t_model):
                     
                 if pred == 0:
-                    y_pred = self.cohort1_model.predict_proba(X_test_full)[:, 1]
+                    y_pred = self.cohort1_model_3d.predict(X_test_full)
 
-                    st.write("Mortality probability  for the next day:", y_pred[0])
+                    st.write("The patient belongs to: Cohort ", int(1))
+                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
 
-
+                    y_pred_proba = self.cohort1_model_3d.predict_proba(X_test_full)[:, 1]
+                    st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
                 if pred == 1:
-                    y_pred = self.cohort2_model.predict_proba(X_test_full)[:, 1]
+                    y_pred = self.cohort2_model_3d.predict(X_test_full)
 
-                    st.write("Mortality probability  for the next day:", y_pred[0])
+                    st.write("The patient belongs to: Cohort ", int(2))
+                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
 
-            return y_pred
+                    y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
+                    st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
+
+
+            return y_pred, y_pred_proba
 
         
         def generate_counterfactuals(self, X_test, total_CFs=5, desired_class=0, features_to_vary=None, permitted_range=None):
@@ -764,8 +808,8 @@ if uploaded_file is not None:
                 
                 weighted_means_df = st.session_state['weighted_means_df']
                 #print(weighted_means_df)
-                prediction = model.predict(weighted_means_df)
-                prediction_proba = model.predict_proba(weighted_means_df)
+                prediction,prediction_proba = model.predict(weighted_means_df)
+                #prediction_proba = model.predict_proba(weighted_means_df)
                 #print(prediction, prediction_proba)
                 
                 st.header("**How to interprete the results:**")
