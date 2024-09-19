@@ -232,6 +232,9 @@ if uploaded_file is not None:
 
         # Function to create a SHAP waterfall plot
         def plot_shap_waterfall(self, X_test):
+            
+            st.write('### SHAP-explanations for 24hours_mortality prediction')
+
             # Preprocess the test data
             df = self.scaler.transform(X_test)
             df = pd.DataFrame(df, columns=[
@@ -270,18 +273,65 @@ if uploaded_file is not None:
 
                 # Close the plot to avoid memory leaks
                 plt.close()
+                
+                
+                #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+                
+            st.write('### SHAP-explanations for 3days_mortality prediction')
+                
+            # Preprocess the test data
+            df = self.scaler.transform(X_test)
+            df = pd.DataFrame(df, columns=[
+                'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
+                'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
+                'PC21', 'PC22'
+            ])
 
-                # Display SHAP explanation
-                st.write("""
-                ### How to Read the SHAP Waterfall Plot:
+            # Predict using the model
+            y_pred_t_model = self.t_model_3d.predict(df)
+            y_pred_t_model = pd.Series(y_pred_t_model)
+            y_pred_t_model.index = X_test.index
+
+            # Create SHAP explainer and values
+            for index, pred in enumerate(y_pred_t_model):
+                if pred == 0:
+                    explainer = shap.TreeExplainer(self.cohort1_model_3d)
+                else:  # Assuming it's binary classification, hence the `else` for pred == 1
+                    explainer = shap.TreeExplainer(self.cohort2_model_3d)
+
+                # Compute SHAP values
+                shap_values = explainer(X_test.iloc[[index]])  # Obtain an Explanation object
+
+                # Plot SHAP waterfall plot
+                shap.initjs()
+                plt.figure(figsize=(10, 6))
+                shap.waterfall_plot(shap_values[0], max_display=10)  # Display only top features
+
+                # Save plot to an in-memory buffer instead of disk
+                buffer = io.BytesIO()
+                plt.savefig(buffer, format='png', bbox_inches='tight')
+                buffer.seek(0)
+
+                # Display the image in Streamlit directly from memory
+                st.image(buffer)
+
+                # Close the plot to avoid memory leaks
+                plt.close()
                 
-                - **Baseline**: The baseline represents the average predicted value.
-                - **Positive Values (Red)**: Features that increase the predicted value (towards mortality).
-                - **Negative Values (Blue)**: Features that decrease the predicted value (towards survival).
-                - **Arrows**: Indicate how much each feature contributes to the prediction.
                 
-                The waterfall plot helps you understand which features have the most significant impact on the prediction.
-                """)
+            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+
+            # Display SHAP explanation
+            st.write("""
+            ### How to Read the SHAP Waterfall Plot:
+            
+            - **Baseline**: The baseline represents the average predicted value.
+            - **Positive Values (Red)**: Features that increase the predicted value (towards mortality).
+            - **Negative Values (Blue)**: Features that decrease the predicted value (towards survival).
+            - **Arrows**: Indicate how much each feature contributes to the prediction.
+            
+            The waterfall plot helps you understand which features have the most significant impact on the prediction.
+            """)
 
 
 
