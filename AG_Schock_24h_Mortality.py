@@ -512,7 +512,7 @@ if uploaded_file is not None:
                 text1 = process_excel(uploaded_file)
             elif uploaded_file.name.endswith('.pdf'):
                 text1 = process_pdf(uploaded_file)
-            #st.write(text1)
+            st.write(text1)
             extracted_df = text_extraction(text1, synonyms)
             st.write(extracted_df.T)
 
