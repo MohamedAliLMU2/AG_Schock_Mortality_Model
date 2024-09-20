@@ -491,21 +491,26 @@ if uploaded_file is not None:
             return result_df
 
 
-        # Funktion zur Verarbeitung der hochgeladenen Excel-Datei
         def process_excel(file):
-            df = pd.read_excel(file)
+            try:
+                # Lade die Datei explizit mit openpyxl
+                df = pd.read_excel(file, engine='openpyxl')
+                
+                df = df.dropna(how='all')  # Entfernt leere Zeilen
+                df = df.dropna(axis=1, how='all')  # Entfernt leere Spalten
         
-            df = df.dropna(how='all')  # Entfernt leere Zeilen
-            df = df.dropna(axis=1, how='all')  # Entfernt leere Spalten
+                # Konvertiere DataFrame zu Text
+                text = df.to_string(index=False, na_rep='')
+                text = text.replace('Unnamed: 0', '')
         
-            text = df.to_string(index=False, na_rep='')
-            text = text.replace('Unnamed: 0', '')
+                # Entferne komische Zeichen und überflüssige Leerzeichen
+                text = re.sub(r'[^\x00-\x7F]+', '', text)
+                text = '\n'.join(line.strip() for line in text.splitlines())
         
-            # Entferne komische Zeichen, aber halte die Struktur
-            text = re.sub(r'[^\x00-\x7F]+', '', text)  # Entfernt nicht-ASCII-Zeichen
-            text = '\n'.join(line.strip() for line in text.splitlines())  # Entfernt überflüssige Leerzeichen
+                return text
         
-            return text
+            except Exception as e:
+                return f"Fehler beim Verarbeiten der Excel-Datei: {str(e)}"
         
         # Funktion zur Verarbeitung der hochgeladenen PDF-Datei
         def process_pdf(file):
