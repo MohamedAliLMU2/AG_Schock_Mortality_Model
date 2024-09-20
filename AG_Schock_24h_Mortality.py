@@ -401,56 +401,47 @@ if uploaded_file is not None:
 
 
 
-
-
         def text_extraction(text, synonyms):
             # Muster für Zeitangaben im Format HH:MM:SS oder HH:MM
             time_pattern = r'\b\d{2}:\d{2}(?::\d{2})?\b'
-            # Muster für Datum-Uhrzeit-Kombinationen im Format YYYY-MM-DD HH:MM:SS oder YYYY-MM-DD HH:MM
-            datetime_pattern = r'\b\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?\b'
-
-            # Finde alle Zeit- und Datum-Uhrzeit-Kombinationen im Text
-            times = re.findall(f'({time_pattern})|({datetime_pattern})', text)
-            # Flatten the list of tuples and remove empty strings
-            times = [t for t in (item for sublist in times for item in sublist) if t]
-
+            
+            # Finde alle Zeitangaben im Text
+            times = re.findall(time_pattern, text)
+            
             # Konvertiere Zeiten zu HH:MM:SS Format (falls notwendig)
             def format_time(time_str):
                 if len(time_str) == 5:  # Wenn Zeit im Format HH:MM vorliegt
                     return time_str + ":00"
                 return time_str  # Bereits im Format HH:MM:SS
-
+        
             times = [format_time(t) for t in times]
-
+        
             # Datenstruktur für die Ergebnisse
             data = {'Time': times}
-
+        
             # Durch die Synonyme iterieren und Features extrahieren
             for feature, synonym_list in synonyms.items():
                 values = []
                 for synonym in synonym_list:
                     # Muster für das jeweilige Feature: Wert nach dem Synonym (korrigiert für ganze und dezimale Zahlen)
-                    pattern = rf'{re.escape(synonym)} (\d+\.?\d*) (\d+\.?\d*)'
+                    pattern = rf'{re.escape(synonym)}\s*(\d+\.?\d*)'
                     matches = re.findall(pattern, text, re.IGNORECASE)
                     if matches:
                         # Die Werte in die entsprechende Spalte einfügen
-                        values.extend([match[0] for match in matches])
-                        values.extend([match[1] for match in matches])
+                        values.extend([float(match) for match in matches])
                         break  # Feature wurde gefunden, keine weiteren Synonyme prüfen
-
+        
                 # Falls Werte vorhanden sind, in die Datenstruktur einfügen
                 if values:
-                    # Wir fügen die Werte so in die Datenstruktur ein, dass jede Zeit ein einzelner Wert hat
-                    values = [float(v) for v in values]  # Konvertiere Strings zu Float
                     # Erstelle eine Liste von Werten, die den gefundenen Zeiten zugeordnet sind
                     data[feature] = [values[i] if i < len(values) else None for i in range(len(times))]
-
+        
             # In eine Tabelle umwandeln (DataFrame)
             df = pd.DataFrame(data)
-
+        
             # Verstecke leere Spalten, die keine Daten enthalten
             df = df.dropna(axis=1, how='all')
-
+        
             return df
 
 
