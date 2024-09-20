@@ -514,63 +514,42 @@ if uploaded_file is not None:
             text = re.sub(r'[^\x00-\x7F]+', '', text)  # Entfernt nicht-ASCII-Zeichen
             return text
         
-        
-        # Funktion zur Textextraktion und Verarbeitung
+                
         def text_extraction(text, synonyms):
-            # Muster für Zeitangaben im Format HH:MM:SS oder HH:MM
-            time_pattern = r'\b\d{2}:\d{2}(?::\d{2})?\b'
-            # Muster für Datum-Uhrzeit-Kombinationen im Format YYYY-MM-DD HH:MM:SS oder YYYY-MM-DD HH:MM
-            datetime_pattern = r'\b\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?\b'
-            # Muster für Datum im Format YYYY-MM-DD
-            date_pattern = r'\b\d{4}-\d{2}-\d{2}\b'
+            # 1. Zeiten extrahieren (HH:MM:SS Format)
+            time_pattern = r'\b\d{2}:\d{2}:\d{2}\b'
+            times = re.findall(time_pattern, text)
+            
+            # 2. Datenstruktur für die Ergebnisse erstellen
+            data = {'Time': times}
         
-            # Finde alle Datum-Uhrzeit-Kombinationen und Datum im Text
-            datetime_matches = re.findall(f'({datetime_pattern})|({date_pattern})', text)
-            datetimes = [dt for dt in (item for sublist in datetime_matches for item in sublist) if dt]
-        
-            # Konvertiere die gefundenen Datumsangaben zu einem Datumsobjekt
-            def parse_datetime(dt_str):
-                try:
-                    return datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S')
-                except ValueError:
-                    try:
-                        return datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
-                    except ValueError:
-                        return datetime.strptime(dt_str, '%Y-%m-%d')
-        
-            datetimes = [parse_datetime(dt) for dt in datetimes]
-        
-            # Werte nur innerhalb eines 24-Stunden-Zeitraums nach dem ersten Datum erfassen
-            if datetimes:
-                start_datetime = datetimes[0]
-                end_datetime = start_datetime + timedelta(hours=24)
-                datetimes = [dt for dt in datetimes if start_datetime <= dt <= end_datetime]
-        
-            # Datenstruktur für die Ergebnisse vorbereiten
-            data = {'Datetime': datetimes}
-        
-            # Durch die Synonyme iterieren und Werte extrahieren
+            # 3. Durch die Synonyme iterieren und Features extrahieren
             for feature, synonym_list in synonyms.items():
                 values = []
                 for synonym in synonym_list:
-                    # Muster für das jeweilige Feature: Wert nach dem Synonym (ganze oder dezimale Zahlen)
-                    pattern = rf'{re.escape(synonym)} (\d+\.?\d*)'
+                    # Muster für das jeweilige Feature: Synonym gefolgt von einer Zahl (Ganzzahl oder Dezimal)
+                    pattern = rf'{re.escape(synonym)}\s+(\d+(\.\d+)?)'
                     matches = re.findall(pattern, text, re.IGNORECASE)
                     if matches:
-                        # Werte in die entsprechende Liste einfügen
-                        values.extend(matches)
-                        break  # Wenn ein Synonym gefunden wurde, breche die Suche ab
+                        # Füge nur die Zahlen (erste Gruppe des Matches) hinzu
+                        values.extend([float(match[0]) for match in matches])
+                        break  # Feature wurde gefunden, keine weiteren Synonyme prüfen
         
-                # Falls Werte vorhanden sind, konvertiere sie zu Float und ordne sie den Datumsangaben zu
+                # Falls Werte vorhanden sind, in die Datenstruktur einfügen
                 if values:
-                    values = [float(v) for v in values]
-                    # Erstelle eine Liste von Werten, die den gefundenen Datumsangaben zugeordnet sind
-                    data[feature] = [values[i] if i < len(values) else None for i in range(len(datetimes))]
+                    # Liste der Werte muss dieselbe Länge wie die Liste der Zeiten haben
+                    if len(values) < len(times):
+                        values.extend([None] * (len(times) - len(values)))
+                    elif len(values) > len(times):
+                        values = values[:len(times)]  # Werte auf die Anzahl der Zeiten zuschneiden
         
-            # In eine Tabelle umwandeln (DataFrame)
+                    # Füge die Werte dem entsprechenden Feature hinzu
+                    data[feature] = values
+        
+            # 4. In eine Tabelle umwandeln (DataFrame)
             df = pd.DataFrame(data)
         
-            # Entferne leere Spalten, die keine Daten enthalten
+            # 5. Verstecke leere Spalten, die keine Daten enthalten
             df = df.dropna(axis=1, how='all')
         
             return df
