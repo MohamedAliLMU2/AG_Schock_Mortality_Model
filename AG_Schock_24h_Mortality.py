@@ -482,35 +482,45 @@ if uploaded_file is not None:
             return result_df
 
 
-        def text_extraction(input_string, synonym_dict):
-            lines = input_string.split("\n")
-            data = []
-            for line in lines:
-                time_str, rest = line.split(" ", 1)
-                try:
-                    time = parse(time_str)
-                except ValueError:
-                    print(f"Ungültige Zeitangabe: {time_str}")
-                    continue
+        # Funktion zur Normalisierung von Zeit
+        def normalize_time(text):
+
+            time_pattern = r'(\d{1,2})[:.](\d{2})'
+            matches = re.findall(time_pattern, text)
+            normalized_times = []
+            for match in matches:
+                hours, minutes = match
+                normalized_time = f"{int(hours):02d}:{int(minutes):02d}"
+                normalized_times.append(normalized_time)
+            return normalized_times
         
-                values = rest.split(" ")
-                row_data = {}
-                for i in range(0, len(values), 2):
-                    key = values[i]
-                    val = values[i + 1]
+        # Funktion zur Erkennung von Synonymen und Ersetzen durch Standardbegriffe
+        def replace_synonyms(text, synonyms):
+            for standard_term, synonym_list in synonyms.items():
+                for synonym in synonym_list:
+                    text = re.sub(rf'\b{re.escape(synonym)}\b', standard_term, text, flags=re.IGNORECASE)
+            return text
         
-                    # Synonyme ersetzen
-                    for synonym, replacements in synonym_dict.items():
-                        if key in replacements:
-                            key = synonym
-                            break
+        # Funktion zum Verarbeiten der Daten und Erstellen eines DataFrames
+        def text_extraction(input_text, synonyms):
+
+            # Schritt 1: Normalisiere die Uhrzeiten
+            times = normalize_time(input_text)
         
-                    row_data[key] = val
-                data.append((time, row_data))
+            # Schritt 2: Ersetze die Synonyme im Text
+            normalized_text = replace_synonyms(input_text, synonyms)
         
-            # DataFrame mit sortierter Reihenfolge erstellen
-            sorted_data = sorted(data, key=lambda x: x[0])
-            df = pd.DataFrame(data=[x[1] for x in sorted_data])
+            # Schritt 3: Extrahiere die Werte und Zuordnungen
+            # Diese Annahme basiert darauf, dass die Daten im Format "Begriff Wert" vorliegen
+            data_pattern = r'(\w+(?: \w+)?)(?:\s+(\d+))'  # Muster zum Erkennen von "Begriff Wert"
+            data = re.findall(data_pattern, normalized_text)
+        
+            # Schritt 4: Erstelle den DataFrame
+            columns = ['Zeit'] + [term for term, _ in data[:len(times)]]
+            values = [times] + [[int(value) for _, value in data[:len(times)]]]
+        
+            df = pd.DataFrame([values], columns=columns)
+        
             return df
 
 
