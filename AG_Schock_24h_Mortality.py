@@ -481,10 +481,10 @@ if uploaded_file is not None:
             
             return result_df
 
-
-        # Funktion zur Normalisierung von Zeit
         def normalize_time(text):
-
+            """
+            Erkenne unterschiedliche Zeitformate und normalisiere sie zu einem einheitlichen Format (HH:MM).
+            """
             time_pattern = r'(\d{1,2})[:.](\d{2})'
             matches = re.findall(time_pattern, text)
             normalized_times = []
@@ -496,6 +496,9 @@ if uploaded_file is not None:
         
         # Funktion zur Erkennung von Synonymen und Ersetzen durch Standardbegriffe
         def replace_synonyms(text, synonyms):
+            """
+            Ersetze erkannte Synonyme in einem Text durch die Standardbegriffe.
+            """
             for standard_term, synonym_list in synonyms.items():
                 for synonym in synonym_list:
                     text = re.sub(rf'\b{re.escape(synonym)}\b', standard_term, text, flags=re.IGNORECASE)
@@ -503,7 +506,9 @@ if uploaded_file is not None:
         
         # Funktion zum Verarbeiten der Daten und Erstellen eines DataFrames
         def text_extraction(input_text, synonyms):
-
+            """
+            Erkenne Zeit, ersetze Synonyme und extrahiere die Daten in einem DataFrame.
+            """
             # Schritt 1: Normalisiere die Uhrzeiten
             times = normalize_time(input_text)
         
@@ -512,14 +517,25 @@ if uploaded_file is not None:
         
             # Schritt 3: Extrahiere die Werte und Zuordnungen
             # Diese Annahme basiert darauf, dass die Daten im Format "Begriff Wert" vorliegen
-            data_pattern = r'(\w+(?: \w+)?)(?:\s+(\d+))'  # Muster zum Erkennen von "Begriff Wert"
+            data_pattern = r'(\w+(?: \w+)?)(?:\s+(-?\d+(?:,\d+)?))'  # Muster zum Erkennen von "Begriff Wert"
             data = re.findall(data_pattern, normalized_text)
         
             # Schritt 4: Erstelle den DataFrame
-            columns = ['Zeit'] + [term for term, _ in data[:len(times)]]
-            values = [times] + [[int(value) for _, value in data[:len(times)]]]
+            data_dict = {'Zeit': times}
         
-            df = pd.DataFrame([values], columns=columns)
+            for term, value in data:
+                term = term.strip()
+                if term in data_dict:
+                    data_dict[term].append(float(value.replace(',', '.')))
+                else:
+                    data_dict[term] = [float(value.replace(',', '.'))]
+        
+            # Fülle die leeren Werte in den DataFrame auf, um gleiche Anzahl von Werten zu haben
+            max_len = max(len(v) for v in data_dict.values())
+            for key in data_dict:
+                data_dict[key] += [None] * (max_len - len(data_dict[key]))
+        
+            df = pd.DataFrame(data_dict)
         
             return df
 
