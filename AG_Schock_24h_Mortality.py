@@ -515,46 +515,6 @@ if uploaded_file is not None:
             return text
         
                 
-        def text_extraction(text, synonyms):
-            # 1. Zeiten extrahieren (HH:MM:SS Format)
-            time_pattern = r'\b\d{2}:\d{2}:\d{2}\b'
-            times = re.findall(time_pattern, text)
-            
-            # 2. Datenstruktur für die Ergebnisse erstellen
-            data = {'Time': times}
-        
-            # 3. Durch die Synonyme iterieren und Features extrahieren
-            for feature, synonym_list in synonyms.items():
-                values = []
-                for synonym in synonym_list:
-                    # Muster für das jeweilige Feature: Synonym gefolgt von einer Zahl (Ganzzahl oder Dezimal)
-                    pattern = rf'{re.escape(synonym)}\s+(\d+(\.\d+)?)'
-                    matches = re.findall(pattern, text, re.IGNORECASE)
-                    if matches:
-                        # Füge nur die Zahlen (erste Gruppe des Matches) hinzu
-                        values.extend([float(match[0]) for match in matches])
-                        break  # Feature wurde gefunden, keine weiteren Synonyme prüfen
-        
-                # Falls Werte vorhanden sind, in die Datenstruktur einfügen
-                if values:
-                    # Liste der Werte muss dieselbe Länge wie die Liste der Zeiten haben
-                    if len(values) < len(times):
-                        values.extend([None] * (len(times) - len(values)))
-                    elif len(values) > len(times):
-                        values = values[:len(times)]  # Werte auf die Anzahl der Zeiten zuschneiden
-        
-                    # Füge die Werte dem entsprechenden Feature hinzu
-                    data[feature] = values
-        
-            # 4. In eine Tabelle umwandeln (DataFrame)
-            df = pd.DataFrame(data)
-        
-            # 5. Verstecke leere Spalten, die keine Daten enthalten
-            df = df.dropna(axis=1, how='all')
-        
-            return df
-
-
 
 
 
