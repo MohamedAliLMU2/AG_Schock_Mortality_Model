@@ -482,39 +482,35 @@ if uploaded_file is not None:
             return result_df
 
 
-        def text_extraction(input_data, synonym_dict):
-            # Initialisierung von Variablen
-            time_pattern = re.compile(r'(\d{2}:\d{2})')  # Muster zur Erkennung von Uhrzeiten
+        def text_extraction(input_string, synonym_dict):
+            lines = input_string.split("\n")
             data = []
-            time_list = []
-            
-            # Schritt 1: Erkennung der Uhrzeiten und Extraktion der Werte
-            for line in input_data.splitlines():
-                time_matches = time_pattern.findall(line)
-                if time_matches:
-                    time_list.append(time_matches[0])  # Beibehalten der Reihenfolge der Uhrzeiten
-                    values = re.sub(time_pattern, '', line).strip()  # Entfernt die Uhrzeit
-                    data.append(values.split())
-            
-            # Schritt 2: Erkennung und Ersetzung von Synonymen
-            processed_data = []
-            for row in data:
-                processed_row = []
-                for item in row:
-                    # Überprüfung, ob der Eintrag ein Synonym ist, und Ersetzung
-                    if item in synonym_dict:
-                        processed_row.append(synonym_dict[item])
-                    else:
-                        processed_row.append(item)
-                processed_data.append(processed_row)
-            
-            # Schritt 3: Erstellung eines DataFrames mit den erkannten Werten
-            columns = ['Time'] + [synonym_dict.get(key, key) for key in processed_data[0]]
-            df = pd.DataFrame(columns=columns)
-            
-            for i, row in enumerate(processed_data[1:], start=1):  # Erste Zeile enthält Spaltennamen
-                df.loc[i] = [time_list[i-1]] + row
-            
+            for line in lines:
+                time_str, rest = line.split(" ", 1)
+                try:
+                    time = parse(time_str)
+                except ValueError:
+                    print(f"Ungültige Zeitangabe: {time_str}")
+                    continue
+        
+                values = rest.split(" ")
+                row_data = {}
+                for i in range(0, len(values), 2):
+                    key = values[i]
+                    val = values[i + 1]
+        
+                    # Synonyme ersetzen
+                    for synonym, replacements in synonym_dict.items():
+                        if key in replacements:
+                            key = synonym
+                            break
+        
+                    row_data[key] = val
+                data.append((time, row_data))
+        
+            # DataFrame mit sortierter Reihenfolge erstellen
+            sorted_data = sorted(data, key=lambda x: x[0])
+            df = pd.DataFrame(data=[x[1] for x in sorted_data])
             return df
 
 
