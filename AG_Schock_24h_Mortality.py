@@ -542,6 +542,99 @@ if uploaded_file is not None:
 
 
 
+
+        def process_excel(file, synonyms):
+            # Lesen der Excel-Datei
+            df = pd.read_excel(file)
+            df = df.dropna(how='all')  # Entfernt leere Zeilen
+            df = df.dropna(axis=1, how='all')  # Entfernt leere Spalten
+
+            # Muster für Zeitangaben im Format HH:MM:SS oder HH:MM
+            time_pattern = r'\b\d{2}:\d{2}(?::\d{2})?\b'
+            # Muster für Datum-Uhrzeit-Kombinationen im Format YYYY-MM-DD HH:MM:SS oder YYYY-MM-DD HH:MM
+            datetime_pattern = r'\b\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?\b'
+
+            # Datenstruktur für extrahierte Daten
+            data = {'Time': []}
+            time_columns = []  # Liste zur Speicherung der Spalten mit Zeitangaben
+
+            # Gehe durch die Spalten des DataFrames und finde die Spalten mit Zeitangaben
+            for col in df.columns:
+                for cell_value in df[col]:
+                    if re.search(f'({time_pattern})|({datetime_pattern})', str(cell_value)):
+                        time_columns.append(col)
+                        break  # Wenn eine Zeitangabe in der Spalte gefunden wurde, zur nächsten Spalte gehen
+
+            # Durch die Zeilen und Spalten iterieren
+            for index, row in df.iterrows():
+                # Finde und konvertiere alle Zeitangaben in der Zeile in den Zeitspalten
+                times = []
+                for col in time_columns:
+                    cell_value = str(row[col])
+                    found_times = re.findall(f'({time_pattern})|({datetime_pattern})', cell_value)
+                    found_times = [t for t in (item for sublist in found_times for item in sublist) if t]
+                    found_times = [format_time(t) for t in found_times]
+                    times.extend(found_times)
+
+                # Wenn Zeitangaben gefunden wurden, füge sie zur Datenstruktur hinzu
+                if times:
+                    data['Time'].extend(times)
+
+                # Gehe durch die Spalten der aktuellen Zeile, um Synonyme zu finden
+                for feature, synonym_list in synonyms.items():
+                    for synonym in synonym_list:
+                        # Verwende \b um das Synonym als eigenständiges Wort zu suchen
+                        pattern = rf'\b{re.escape(synonym)}\b'
+                        if any(re.search(pattern, str(row[col]), re.IGNORECASE) for col in df.columns):
+                            # Extrahiere Werte in der aktuellen Zeile aus den Zeitspalten
+                            values = []
+                            for col in time_columns:
+                                cell_value = str(row[col]).strip()
+                                if cell_value == '' or pd.isna(row[col]):  # Überprüfen auf leere Zellen oder NaN-Werte
+                                    values.append(None)  # Füge `None` hinzu, um leere Zellen zu repräsentieren
+                                else:
+                                    value_match = re.findall(r'(-?\d+\.?\d*)', cell_value)
+                                    if value_match:  # Nur hinzufügen, wenn tatsächlich Werte gefunden wurden
+                                        values.extend([float(val) for val in value_match])
+                                    else:
+                                        values.append(None)  # Wenn kein Wert gefunden wurde, `None` hinzufügen
+                            # Füge die extrahierten Werte zum Feature hinzu
+                            if values:
+                                if feature not in data:
+                                    data[feature] = []
+                                data[feature].extend(values)
+                            break  # Feature gefunden, keine weiteren Synonyme prüfen
+
+            # Überprüfen, ob die Anzahl der Werte größer ist als die Anzahl der Zeitangaben
+            for feature, values in data.items():
+                if feature == 'Time':
+                    continue
+                if len(values) > len(data['Time']):
+                    return f"Error: Die Anzahl der erkannten Werte für '{feature}' ist größer als die Anzahl der Zeitangaben. Bitte überprüfen Sie die Daten in dieser Variable."
+
+            # Erstellen eines DataFrames, der die Zeitangaben den Variablen zuordnet
+            final_data = {'Time': data['Time']}
+            for feature, values in data.items():
+                if feature == 'Time':
+                    continue
+                final_data[feature] = values + [None] * (len(final_data['Time']) - len(values))
+
+            result_df = pd.DataFrame(final_data)
+
+            # Verstecke leere Spalten, die keine Daten enthalten
+            result_df = result_df.dropna(axis=1, how='all')
+
+            return result_df
+
+        def format_time(time_str):
+            if len(time_str) == 5:  # Wenn Zeit im Format HH:MM vorliegt
+                return time_str + ":00"
+            return time_str  # Bereits im Format HH:MM:SS
+
+
+
+
+
         #if st.button("Data input as PDF / Excel"):
 
             # Datei-Upload-Optionen
@@ -555,13 +648,14 @@ if uploaded_file is not None:
 
         if uploaded_file:
             if uploaded_file.name.endswith('.xlsx'):
-                text1 = process_excel(uploaded_file)
+                extracted_df = process_excel(uploaded_file, synonyms)
             elif uploaded_file.name.endswith('.pdf'):
                 text1 = process_pdf(uploaded_file)
-            st.write(text1)
-            extracted_df = text_extraction(text1, synonyms)
-            st.write(extracted_df.T)
+                #st.write(text1)
+                extracted_df = text_extraction(text1, synonyms)
+                st.write(extracted_df.T)
 
+            st.write(extracted_df.T)
             # Aktualisiere Session State
             #if 'values' in st.session_state:
             #    st.session_state['values'] = pd.concat([st.session_state['values'], extracted_df.T])
@@ -576,12 +670,14 @@ if uploaded_file is not None:
 
                 if uploaded_file2:
                     if uploaded_file2.name.endswith('.xlsx'):
-                        df = process_excel(uploaded_file2)
-                        text = df
+                        extracted_df = process_excel(uploaded_file2, synonyms)
                     elif uploaded_file2.name.endswith('.pdf'):
-                        text = process_pdf(uploaded_file2)
-                    #st.write(text)
-                    extracted_df = text_extraction(text, synonyms)
+                        text1 = process_pdf(uploaded_file2)
+                        #st.write(text1)
+                        extracted_df = text_extraction(text1, synonyms)
+
+                    #st.write(extracted_df.T)
+                    
                     max_col_number = max([int(col) for col in st.session_state['values'].columns])
                     new_columns = {col: str(max_col_number + i + 1) for i, col in enumerate(extracted_df.T.columns)}
                     extracted_df = extracted_df.T.rename(columns=new_columns)
