@@ -371,21 +371,7 @@ if uploaded_file is not None:
         }
 
 
-        # Funktion zur Verarbeitung der hochgeladenen Excel-Datei
-        def process_excel(file):
-            df = pd.read_excel(file)
 
-            df = df.dropna(how='all')  # Entfernt leere Zeilen
-            df = df.dropna(axis=1, how='all')  # Entfernt leere Spalten
-            
-
-            text = df.to_string(index=False, na_rep='')  
-            text = text.replace('Unnamed: 0', '')
-
-            text = '\n'.join(line.strip() for line in text.splitlines())
-
-            
-            return text
 
 
 
@@ -480,6 +466,9 @@ if uploaded_file is not None:
             result_df = pd.DataFrame(weighted_means, index=['WeightedMean']).transpose()
             
             return result_df
+
+
+        
 
         def normalize_time(text):
             """
