@@ -626,242 +626,144 @@ if uploaded_file is not None:
 
         #if st.button("Data input as PDF / Excel"):
 
-            # Datei-Upload-Optionen
-        uploaded_file = st.file_uploader("Please upload a PDF or Excel file", type=['xlsx', 'pdf'])
 
-            # Initialisiere die Session-State-Variable, um Daten zu speichern
-        #if 'weighted_means' not in st.session_state:
-        #    st.session_state['weighted_means'] = {}
+        #if 'values' not in st.session_state:
+        #    st.session_state['values'] = pd.DataFrame()
+
+        # Frage, wie viele Dateien hochgeladen werden sollen
+        num_files = st.number_input("How many files would you like to upload?", min_value=1, step=1, value=1)
+
+        # Liste für die hochgeladenen Dateien
+        uploaded_files = []
+
+        # Datei-Uploads basierend auf der Anzahl der angegebenen Dateien
+        for i in range(num_files):
+            uploaded_file = st.file_uploader(f"Please upload file {i+1} (PDF or Excel)", type=['xlsx', 'pdf'], key=f'file_uploader_{i}')
+            if uploaded_file:
+                uploaded_files.append(uploaded_file)
+
+        # Überprüfen, ob alle Dateien hochgeladen wurden
+        if len(uploaded_files) == num_files:
+            all_dfs = []  # Liste zum Speichern der DataFrames
+
+            for file in uploaded_files:
+                if file.name.endswith('.xlsx'):
+                    extracted_df = process_excel(file, synonyms)
+                elif file.name.endswith('.pdf'):
+                    text1 = process_pdf(file)
+                    extracted_df = text_extraction(text1, synonyms)
+                
+                all_dfs.append(extracted_df.T)
+            
+            #st.write(all_dfs)
+            
+            # Alle DataFrames zusammenführen
+            if all_dfs:
+
+                max_col_number = sum([df.shape[1] for df in all_dfs])
+                combined_df = pd.concat(all_dfs, axis=1)
+                combined_df.columns = range(max_col_number)
+                st.session_state['values'] = combined_df
+                st.write("Combined DataFrame:")
+                st.write(st.session_state['values'])
 
 
 
-        if uploaded_file:
-            if uploaded_file.name.endswith('.xlsx'):
-                extracted_df = process_excel(uploaded_file, synonyms)
-            elif uploaded_file.name.endswith('.pdf'):
-                text1 = process_pdf(uploaded_file)
-                #st.write(text1)
-                extracted_df = text_extraction(text1, synonyms)
-                st.write(extracted_df.T)
 
-            st.write(extracted_df.T)
-            # Aktualisiere Session State
-            #if 'values' in st.session_state:
-            #    st.session_state['values'] = pd.concat([st.session_state['values'], extracted_df.T])
-            #else:
-            st.session_state['values'] = extracted_df.T
+        if 'values' in st.session_state:
+            Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
+            if Input_modify == "yes": 
+            
+                # Erstelle ein DataFrame mit den importierten Werten
+                editable_df = st.session_state['values'].copy()
+
+                features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
+                                    'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
+                                    'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
+                                    'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
+                                    'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
+                                    'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
+                                    'Height', 'Weight', 'plateletsWeightedMean']
+                
+                # Prüfe, welche Spalten in editable_df fehlen
+                missing_cols = [col for col in features_names if col not in editable_df.index]
+
+                # Füge fehlende Indizes mit NaN-Werten hinzu
+                if missing_cols:
+                    for col in missing_cols:
+                        editable_df.loc[col] = None
+
+                
+                # Index in eine reguläre Spalte umwandeln
+                editable_df = editable_df.reset_index()
+                editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
+
             
 
-            # Frage nach weiteren Dateien
-            more_files = st.radio("Do you want to upload more data?", ("Yes", "No"))
-            if more_files == "Yes":
-                uploaded_file2 = st.file_uploader("Please upload a PDF or an Excel file", type=['xlsx', 'pdf'])
+                # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
+                edited_df = st.data_editor(editable_df, num_rows="dynamic")
 
-                if uploaded_file2:
-                    if uploaded_file2.name.endswith('.xlsx'):
-                        extracted_df = process_excel(uploaded_file2, synonyms)
-                    elif uploaded_file2.name.endswith('.pdf'):
-                        text1 = process_pdf(uploaded_file2)
-                        #st.write(text1)
-                        extracted_df = text_extraction(text1, synonyms)
-
-                    #st.write(extracted_df.T)
-                    
-                    max_col_number = max([int(col) for col in st.session_state['values'].columns])
-                    new_columns = {col: str(max_col_number + i + 1) for i, col in enumerate(extracted_df.T.columns)}
-                    extracted_df = extracted_df.T.rename(columns=new_columns)
-
-                    st.session_state['values'] = pd.concat([st.session_state['values'], extracted_df], axis=1)
-                    st.write(st.session_state['values'])
-
-            #if more_files == "Nein":
-                    Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
-                    if Input_modify == "yes": 
-                    
-                        # Erstelle ein DataFrame mit den importierten Werten
-                        editable_df = st.session_state['values'].copy()
-
-                        features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                                            'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                                            'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                                            'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                                            'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                                            'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                                            'Height', 'Weight', 'plateletsWeightedMean']
+                edited_df = edited_df.set_index('Feature')
+                
+                # Speichere die bearbeiteten Daten zurück in den Session State
+                st.session_state['values'] = edited_df
                         
-                        # Prüfe, welche Spalten in editable_df fehlen
-                        missing_cols = [col for col in features_names if col not in editable_df.index]
-
-                        # Füge fehlende Indizes mit NaN-Werten hinzu
-                        if missing_cols:
-                            for col in missing_cols:
-                                editable_df.loc[col] = None
 
                         
-                        # Index in eine reguläre Spalte umwandeln
-                        editable_df = editable_df.reset_index()
-                        editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
+                weighted_means_df = calculate_weighted_means(st.session_state['values']).T
+                weighted_means_df = weighted_means_df[features_names]
+                weighted_means_df = weighted_means_df.astype(float)
 
-                    
+                        # Ergebnis für das Modell vorbereiten
+                st.write("Berechnete Werte, die ans Modell geschickt werden:")
+                st.write(weighted_means_df.T)
 
-                        # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                        edited_df = st.data_editor(editable_df, num_rows="dynamic")
+                        # Speichern in Session State
+                st.session_state['weighted_means_df'] = weighted_means_df
+                st.session_state['data_formatted'] = True
 
-                        edited_df = edited_df.set_index('Feature')
+            
+            if Input_modify == "no": 
+                
+                # Erstelle ein DataFrame mit den importierten Werten
+                editable_df = st.session_state['values'].copy()
+
+                features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
+                                    'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
+                                    'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
+                                    'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
+                                    'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
+                                    'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
+                                    'Height', 'Weight', 'plateletsWeightedMean']
+                
+                # Prüfe, welche Spalten in editable_df fehlen
+                missing_cols = [col for col in features_names if col not in editable_df.index]
+
+                # Füge fehlende Indizes mit NaN-Werten hinzu
+                if missing_cols:
+                    for col in missing_cols:
+                        editable_df.loc[col] = None
+
+                # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
+                edited_df = editable_df.copy()
+                
+                # Speichere die bearbeiteten Daten zurück in den Session State
+                st.session_state['values'] = edited_df
                         
-                        # Speichere die bearbeiteten Daten zurück in den Session State
-                        st.session_state['values'] = edited_df
-                                
-
-                                
-                        weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                        weighted_means_df = weighted_means_df[features_names]
-                        weighted_means_df = weighted_means_df.astype(float)
-
-                                # Ergebnis für das Modell vorbereiten
-                        st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                        st.write(weighted_means_df.T)
-
-                                # Speichern in Session State
-                        st.session_state['weighted_means_df'] = weighted_means_df
-                        st.session_state['data_formatted'] = True
-
-                    
-                    if Input_modify == "no": 
-                        
-                        # Erstelle ein DataFrame mit den importierten Werten
-                        editable_df = st.session_state['values'].copy()
-
-                        features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                                            'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                                            'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                                            'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                                            'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                                            'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                                            'Height', 'Weight', 'plateletsWeightedMean']
-                        
-                        # Prüfe, welche Spalten in editable_df fehlen
-                        missing_cols = [col for col in features_names if col not in editable_df.index]
-
-                        # Füge fehlende Indizes mit NaN-Werten hinzu
-                        if missing_cols:
-                            for col in missing_cols:
-                                editable_df.loc[col] = None
-
-                        # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                        edited_df = editable_df.copy()
-                        
-                        # Speichere die bearbeiteten Daten zurück in den Session State
-                        st.session_state['values'] = edited_df
-                                
-
-                                
-                        weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                        weighted_means_df = weighted_means_df[features_names]
-                        weighted_means_df = weighted_means_df.astype(float)
-
-                                # Ergebnis für das Modell vorbereiten
-                        st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                        st.write(weighted_means_df.T)
-
-                                # Speichern in Session State
-                        st.session_state['weighted_means_df'] = weighted_means_df
-                        st.session_state['data_formatted'] = True
-
-
-            if more_files == "No":
-                    Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
-                    if Input_modify == "yes": 
-                    
-                        # Erstelle ein DataFrame mit den importierten Werten
-                        editable_df = st.session_state['values'].copy()
-
-                        features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                                            'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                                            'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                                            'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                                            'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                                            'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                                            'Height', 'Weight', 'plateletsWeightedMean']
-                        
-                        # Prüfe, welche Spalten in editable_df fehlen
-                        missing_cols = [col for col in features_names if col not in editable_df.index]
-
-                        # Füge fehlende Indizes mit NaN-Werten hinzu
-                        if missing_cols:
-                            for col in missing_cols:
-                                editable_df.loc[col] = None
 
                         
-                        # Index in eine reguläre Spalte umwandeln
-                        editable_df = editable_df.reset_index()
-                        editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
+                weighted_means_df = calculate_weighted_means(st.session_state['values']).T
+                weighted_means_df = weighted_means_df[features_names]
+                weighted_means_df = weighted_means_df.astype(float)
 
-                    
+                        # Ergebnis für das Modell vorbereiten
+                st.write("Berechnete Werte, die ans Modell geschickt werden:")
+                st.write(weighted_means_df.T)
 
-                        # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                        edited_df = st.data_editor(editable_df, num_rows="dynamic")
+                        # Speichern in Session State
+                st.session_state['weighted_means_df'] = weighted_means_df
+                st.session_state['data_formatted'] = True
 
-                        edited_df = edited_df.set_index('Feature')
-                        
-                        # Speichere die bearbeiteten Daten zurück in den Session State
-                        st.session_state['values'] = edited_df
-                                
-
-                                
-                        weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                        weighted_means_df = weighted_means_df[features_names]
-                        weighted_means_df = weighted_means_df.astype(float)
-
-                                # Ergebnis für das Modell vorbereiten
-                        st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                        st.write(weighted_means_df.T)
-
-                                # Speichern in Session State
-                        st.session_state['weighted_means_df'] = weighted_means_df
-                        st.session_state['data_formatted'] = True
-
-                    
-                    if Input_modify == "no": 
-                        
-                        # Erstelle ein DataFrame mit den importierten Werten
-                        editable_df = st.session_state['values'].copy()
-
-                        features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                                            'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                                            'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                                            'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                                            'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                                            'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                                            'Height', 'Weight', 'plateletsWeightedMean']
-                        
-                        # Prüfe, welche Spalten in editable_df fehlen
-                        missing_cols = [col for col in features_names if col not in editable_df.index]
-
-                        # Füge fehlende Indizes mit NaN-Werten hinzu
-                        if missing_cols:
-                            for col in missing_cols:
-                                editable_df.loc[col] = None
-
-                        # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                        edited_df = editable_df.copy()
-                        
-                        # Speichere die bearbeiteten Daten zurück in den Session State
-                        st.session_state['values'] = edited_df
-                                
-
-                                
-                        weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                        weighted_means_df = weighted_means_df[features_names]
-                        weighted_means_df = weighted_means_df.astype(float)
-
-                                # Ergebnis für das Modell vorbereiten
-                        st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                        st.write(weighted_means_df.T)
-
-                                # Speichern in Session State
-                        st.session_state['weighted_means_df'] = weighted_means_df
-                        st.session_state['data_formatted'] = True
 
 
     if User_Input == "Manual input":        
