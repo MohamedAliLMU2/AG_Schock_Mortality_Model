@@ -145,7 +145,7 @@ if uploaded_file is not None:
                     optimal_threshold = 0.5493
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.91 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next day::", y_pred)
+                    st.write("Mortality prediction for the next day:", y_pred)
                     st.write("Mortality probability  for the next day:", y_pred_proba[0])
 
 
@@ -158,7 +158,7 @@ if uploaded_file is not None:
                     optimal_threshold = 0.5562
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.72 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next day::", y_pred[0])
+                    st.write("Mortality prediction for the next day:", y_pred[0])
                     st.write("Mortality probability  for the next day:", y_pred_proba[0])
                     
                     
@@ -183,23 +183,25 @@ if uploaded_file is not None:
                 if pred == 0:
                     #y_pred = self.cohort1_model_3d.predict(X_test_full)
 
-                    st.write("The 3d-Mortality ist predicted with 0.81 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
+
 
                     y_pred_proba = self.cohort1_model_3d.predict_proba(X_test_full)[:, 1]
                     optimal_threshold = 0.4048
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
+                    st.write("The 3d-Mortality ist predicted with 0.81 ROC AUC (Accuracy)")
+                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
                     st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
                 if pred == 1:
                     #y_pred = self.cohort2_model_3d.predict(X_test_full)
 
-                    st.write("The 3d-Mortality ist predicted with 0.34 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
 
                     y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
                     optimal_threshold = 0.8712
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
+
+                    st.write("The 3d-Mortality ist predicted with 0.34 ROC AUC (Accuracy)")
+                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
                     st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
 
