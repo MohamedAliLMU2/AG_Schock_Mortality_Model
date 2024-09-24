@@ -782,24 +782,24 @@ if uploaded_file is not None:
 
         # Mapping von technischen Namen zu verständlichen Bezeichnungen
         feature_names = {
-            'RRSysWeightedMeanValue': 'Systolic Blood Pressure',
-            'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure',
-            'sO2WeightedMeanValue': 'Oxygen Saturation',
-            'TempWeightedMean': 'Body Temperature',
+            'RRSysWeightedMeanValue': 'Systolic Blood Pressure (mmHg)',
+            'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure (mmHg)',
+            'sO2WeightedMeanValue': 'Oxygen Saturation (%)',
+            'TempWeightedMean': 'Body Temperature (°C)',
             'PHWeightedMean': 'Blood pH',
-            'LactateWeightedMean': 'Blood Lactate Level',
-            'gluWeightedMean': 'Blood Glucose Level',
-            'HCO3WeightedMean': 'Bicarbonate (HCO3)',
-            'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2)',
-            'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2)',
-            'HBWeightedMean': 'Hemoglobin (HB)',
-            'leucoWeightedMean': 'Leukocytes',
-            'ureaWeightedMean': 'Blood Urea',
-            'HRWeightedMean': 'Heart Rate',
-            'NaWeightedMean': 'Sodium (Na+)',
-            'KWeightedMean': 'Potassium (K+)',
-            'ClWeightedMean': 'Chloride (Cl-)',
-            'plateletsWeightedMean': 'Platelets'
+            'LactateWeightedMean': 'Blood Lactate Level (mmol/L)',
+            'gluWeightedMean': 'Blood Glucose Level (mg/dL)',
+            'HCO3WeightedMean': 'Bicarbonate (HCO3) (mmol/L)',
+            'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2) (mmHg)',
+            'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2) (mmHg)',
+            'HBWeightedMean': 'Hemoglobin (HB) (g/dl)',
+            'leucoWeightedMean': 'Leukocytes (G/l)',
+            'ureaWeightedMean': 'Blood Urea (mg/dl)',
+            'HRWeightedMean': 'Heart Rate (BPM)',
+            'NaWeightedMean': 'Sodium (Na+) (mmol/L)',
+            'KWeightedMean': 'Potassium (K+) (mmol/L)',
+            'ClWeightedMean': 'Chloride (Cl-) (mmol/L)',
+            'plateletsWeightedMean': 'Platelets (G/l)'
         }
 
         # Umgekehrtes Mapping, um später wieder auf die technischen Namen zuzugreifen
