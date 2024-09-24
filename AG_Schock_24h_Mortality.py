@@ -752,7 +752,7 @@ if uploaded_file is not None:
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                display_df = weighted_means_df.T.rename(columns=feature_names)
+                display_df = weighted_means_df.T.rename(index=feature_names)
                 st.write(display_df)
 
                         # Speichern in Session State
@@ -795,7 +795,7 @@ if uploaded_file is not None:
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                display_df = weighted_means_df.T.rename(columns=feature_names)
+                display_df = weighted_means_df.T.rename(index=feature_names)
                 st.write(display_df)
                 
                         # Speichern in Session State
