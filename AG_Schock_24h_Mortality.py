@@ -953,24 +953,24 @@ if uploaded_file is not None:
                     'plateletsWeightedMean']
 
                 permitted_range = {
-                    'RRSysWeightedMeanValue': [90, 150],
-                    'RRDiaWeightedMeanValue': [50, 90],
-                    'sO2WeightedMeanValue': [90, 100],
-                    'PHWeightedMean': [7.35, 7.45],
-                    'LactateWeightedMean': [0, 2],
-                    'gluWeightedMean': [60, 200],
-                    'HCO3WeightedMean': [22, 26],
-                    'PO2WeightedMean': [40, 100],
-                    'PCO2WeightedMean': [24, 40],
-                    'HBWeightedMean': [8, 15],
-                    'ureaWeightedMean': [15, 50],
-                    'HRWeightedMean': [60, 100],
-                    'TempWeightedMean': [36.5, 38],
-                    'NaWeightedMean': [130, 150],
-                    'KWeightedMean': [3.5, 5],
-                    'ClWeightedMean': [90, 110],
-                    'leucoWeightedMean': [5, 20],
-                    'plateletsWeightedMean': [150, 450]}
+                    'RRSysWeightedMeanValue': [60, 150],
+                    'RRDiaWeightedMeanValue': [30, 110],
+                    'sO2WeightedMeanValue': [80, 100],
+                    'PHWeightedMean': [7.20, 7.60],
+                    'LactateWeightedMean': [0, 20],
+                    'gluWeightedMean': [40, 400],
+                    'HCO3WeightedMean': [15, 40],
+                    'PO2WeightedMean': [30, 500],
+                    'PCO2WeightedMean': [15, 200],
+                    'HBWeightedMean': [3, 20],
+                    'ureaWeightedMean': [5, 100],
+                    'HRWeightedMean': [40, 400],
+                    'TempWeightedMean': [34, 41],
+                    'NaWeightedMean': [60, 300],
+                    'KWeightedMean': [1, 9],
+                    'ClWeightedMean': [30, 400],
+                    'leucoWeightedMean': [1, 200],
+                    'plateletsWeightedMean': [5, 1000]}
                 
 
                 # Benutzer wählt die Features aus, die er ändern möchte
