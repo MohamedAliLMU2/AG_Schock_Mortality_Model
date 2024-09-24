@@ -699,7 +699,7 @@ if uploaded_file is not None:
                 st.write("Combined DataFrame:")
 
                 # Verwende die lesbaren Feature-Namen für die Anzeige
-                display_df = st.session_state['values'].rename(columns=feature_names)
+                display_df = st.session_state['values'].rename(index=feature_names)
                 st.write(display_df)
 
 
