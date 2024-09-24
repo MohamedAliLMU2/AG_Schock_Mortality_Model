@@ -384,6 +384,26 @@ if uploaded_file is not None:
 
 
 
+        feature_names = {
+                    'RRSysWeightedMeanValue': 'Systolic Blood Pressure (mmHg)',
+                    'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure (mmHg)',
+                    'sO2WeightedMeanValue': 'Oxygen Saturation (%)',
+                    'TempWeightedMean': 'Body Temperature (°C)',
+                    'PHWeightedMean': 'Blood pH',
+                    'LactateWeightedMean': 'Blood Lactate Level (mmol/L)',
+                    'gluWeightedMean': 'Blood Glucose Level (mg/dL)',
+                    'HCO3WeightedMean': 'Bicarbonate (HCO3) (mmol/L)',
+                    'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2) (mmHg)',
+                    'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2) (mmHg)',
+                    'HBWeightedMean': 'Hemoglobin (HB) (g/dl)',
+                    'leucoWeightedMean': 'Leukocytes (G/l)',
+                    'ureaWeightedMean': 'Blood Urea (mg/dl)',
+                    'HRWeightedMean': 'Heart Rate (BPM)',
+                    'NaWeightedMean': 'Sodium (Na+) (mmol/L)',
+                    'KWeightedMean': 'Potassium (K+) (mmol/L)',
+                    'ClWeightedMean': 'Chloride (Cl-) (mmol/L)',
+                    'plateletsWeightedMean': 'Platelets (G/l)'
+                }
 
 
 
@@ -677,7 +697,11 @@ if uploaded_file is not None:
                 combined_df.columns = range(max_col_number)
                 st.session_state['values'] = combined_df
                 st.write("Combined DataFrame:")
-                st.write(st.session_state['values'])
+
+                # Verwende die lesbaren Feature-Namen für die Anzeige
+                display_df = st.session_state['values'].rename(columns=feature_names)
+                st.write(display_df)
+
 
 
 
@@ -728,7 +752,8 @@ if uploaded_file is not None:
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                st.write(weighted_means_df.T)
+                display_df = weighted_means_df.T.rename(columns=feature_names)
+                st.write(display_df)
 
                         # Speichern in Session State
                 st.session_state['weighted_means_df'] = weighted_means_df
@@ -770,8 +795,9 @@ if uploaded_file is not None:
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                st.write(weighted_means_df.T)
-
+                display_df = weighted_means_df.T.rename(columns=feature_names)
+                st.write(display_df)
+                
                         # Speichern in Session State
                 st.session_state['weighted_means_df'] = weighted_means_df
                 st.session_state['data_formatted'] = True
