@@ -146,7 +146,7 @@ if uploaded_file is not None:
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.91 ROC AUC (Accuracy)")
                     st.write("Mortality prediction for the next day:", y_pred)
-                    st.write("Mortality probability  for the next day:", y_pred_proba[0])
+                    #st.write("Mortality probability  for the next day:", y_pred_proba[0])
 
 
                 if pred == 1:
@@ -159,7 +159,7 @@ if uploaded_file is not None:
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.72 ROC AUC (Accuracy)")
                     st.write("Mortality prediction for the next day:", y_pred[0])
-                    st.write("Mortality probability  for the next day:", y_pred_proba[0])
+                    #st.write("Mortality probability  for the next day:", y_pred_proba[0])
                     
                     
             #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
@@ -190,7 +190,7 @@ if uploaded_file is not None:
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 3d-Mortality ist predicted with 0.81 ROC AUC (Accuracy)")
                     st.write("Mortality prediction for the next 3 days:", y_pred[0])
-                    st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
+                    #st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
                 if pred == 1:
                     #y_pred = self.cohort2_model_3d.predict(X_test_full)
@@ -202,7 +202,7 @@ if uploaded_file is not None:
 
                     st.write("The 3d-Mortality ist predicted with 0.34 ROC AUC (Accuracy)")
                     st.write("Mortality prediction for the next 3 days:", y_pred[0])
-                    st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
+                    #st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
 
             return y_pred, y_pred_proba
