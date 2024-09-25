@@ -154,7 +154,7 @@ if uploaded_file is not None:
 
 
                     
-                    y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
+                    y_pred_proba = self.cohort2_model.predict_proba(X_test_full)[:, 1]
                     optimal_threshold = 0.5562
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.72 ROC AUC (Accuracy)")
