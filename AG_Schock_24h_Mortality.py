@@ -667,9 +667,9 @@ if uploaded_file is not None:
 
                 return df_cleaned
             
-            df = clean_dataset(df)
+            df = clean_dataset(df.T)
 
-            return df
+            return df.T
 
 
         #if st.button("Data input as PDF / Excel"):
@@ -698,8 +698,8 @@ if uploaded_file is not None:
                 if file.name.endswith('.xlsx'):
                     extracted_df = process_excel(file, synonyms)
                 elif file.name.endswith('.pdf'):
-                    text1 = process_pdf(file)
-                    extracted_df = text_extraction(text1, synonyms)
+                    text = process_pdf(file)
+                    extracted_df = text_extraction(text, synonyms)
                 
                 all_dfs.append(extracted_df.T)
             
