@@ -667,9 +667,9 @@ if uploaded_file is not None:
 
                 return df_cleaned
             
-            df = clean_dataset(df.T)
+            df = clean_dataset(df)
 
-            return df.T
+            return df
 
 
         #if st.button("Data input as PDF / Excel"):
