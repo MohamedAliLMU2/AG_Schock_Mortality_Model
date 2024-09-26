@@ -419,49 +419,6 @@ if uploaded_file is not None:
 
 
 
-        def text_extraction(text, synonyms):
-            # Muster für Zeitangaben im Format HH:MM:SS oder HH:MM
-            time_pattern = r'\b\d{2}:\d{2}(?::\d{2})?\b'
-            
-            # Finde alle Zeitangaben im Text
-            times = re.findall(time_pattern, text)
-            
-            # Konvertiere Zeiten zu HH:MM:SS Format (falls notwendig)
-            def format_time(time_str):
-                if len(time_str) == 5:  # Wenn Zeit im Format HH:MM vorliegt
-                    return time_str + ":00"
-                return time_str  # Bereits im Format HH:MM:SS
-        
-            times = [format_time(t) for t in times]
-        
-            # Datenstruktur für die Ergebnisse
-            data = {'Time': times}
-        
-            # Durch die Synonyme iterieren und Features extrahieren
-            for feature, synonym_list in synonyms.items():
-                values = []
-                for synonym in synonym_list:
-                    # Muster für das jeweilige Feature: Wert nach dem Synonym (korrigiert für ganze und dezimale Zahlen)
-                    pattern = rf'{re.escape(synonym)}\s*(\d+\.?\d*)'
-                    matches = re.findall(pattern, text, re.IGNORECASE)
-                    if matches:
-                        # Die Werte in die entsprechende Spalte einfügen
-                        values.extend([float(match) for match in matches])
-                        break  # Feature wurde gefunden, keine weiteren Synonyme prüfen
-        
-                # Falls Werte vorhanden sind, in die Datenstruktur einfügen
-                if values:
-                    # Erstelle eine Liste von Werten, die den gefundenen Zeiten zugeordnet sind
-                    data[feature] = [values[i] if i < len(values) else None for i in range(len(times))]
-        
-            # In eine Tabelle umwandeln (DataFrame)
-            df = pd.DataFrame(data)
-        
-            # Verstecke leere Spalten, die keine Daten enthalten
-            df = df.dropna(axis=1, how='all')
-        
-            return df
-
 
 
 
@@ -500,65 +457,7 @@ if uploaded_file is not None:
             return result_df
 
 
-        
 
-        def normalize_time(text):
-            """
-            Erkenne unterschiedliche Zeitformate und normalisiere sie zu einem einheitlichen Format (HH:MM).
-            """
-            time_pattern = r'(\d{1,2})[:.](\d{2})'
-            matches = re.findall(time_pattern, text)
-            normalized_times = []
-            for match in matches:
-                hours, minutes = match
-                normalized_time = f"{int(hours):02d}:{int(minutes):02d}"
-                normalized_times.append(normalized_time)
-            return normalized_times
-        
-        # Funktion zur Erkennung von Synonymen und Ersetzen durch Standardbegriffe
-        def replace_synonyms(text, synonyms):
-            """
-            Ersetze erkannte Synonyme in einem Text durch die Standardbegriffe.
-            """
-            for standard_term, synonym_list in synonyms.items():
-                for synonym in synonym_list:
-                    text = re.sub(rf'\b{re.escape(synonym)}\b', standard_term, text, flags=re.IGNORECASE)
-            return text
-        
-        # Funktion zum Verarbeiten der Daten und Erstellen eines DataFrames
-        def text_extraction(input_text, synonyms):
-            """
-            Erkenne Zeit, ersetze Synonyme und extrahiere die Daten in einem DataFrame.
-            """
-            # Schritt 1: Normalisiere die Uhrzeiten
-            times = normalize_time(input_text)
-        
-            # Schritt 2: Ersetze die Synonyme im Text
-            normalized_text = replace_synonyms(input_text, synonyms)
-        
-            # Schritt 3: Extrahiere die Werte und Zuordnungen
-            # Diese Annahme basiert darauf, dass die Daten im Format "Begriff Wert" vorliegen
-            data_pattern = r'(\w+(?: \w+)?)(?:\s+(-?\d+(?:,\d+)?))'  # Muster zum Erkennen von "Begriff Wert"
-            data = re.findall(data_pattern, normalized_text)
-        
-            # Schritt 4: Erstelle den DataFrame
-            data_dict = {'Zeit': times}
-        
-            for term, value in data:
-                term = term.strip()
-                if term in data_dict:
-                    data_dict[term].append(float(value.replace(',', '.')))
-                else:
-                    data_dict[term] = [float(value.replace(',', '.'))]
-        
-            # Fülle die leeren Werte in den DataFrame auf, um gleiche Anzahl von Werten zu haben
-            max_len = max(len(v) for v in data_dict.values())
-            for key in data_dict:
-                data_dict[key] += [None] * (max_len - len(data_dict[key]))
-        
-            df = pd.DataFrame(data_dict)
-        
-            return df
 
 
 
@@ -653,20 +552,7 @@ if uploaded_file is not None:
             return time_str  # Bereits im Format HH:MM:SS
 
 
-        
 
-        def normalize_time(text):
-            """
-            Erkenne unterschiedliche Zeitformate und normalisiere sie zu einem einheitlichen Format (HH:MM).
-            """
-            time_pattern = r'(\d{1,2})[:.](\d{2})'
-            matches = re.findall(time_pattern, text)
-            normalized_times = []
-            for match in matches:
-                hours, minutes = match
-                normalized_time = f"{int(hours):02d}:{int(minutes):02d}"
-                normalized_times.append(normalized_time)
-            return normalized_times
         
         def replace_synonyms(text, synonyms):
 
