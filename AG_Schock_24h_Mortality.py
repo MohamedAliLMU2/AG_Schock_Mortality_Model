@@ -653,7 +653,137 @@ if uploaded_file is not None:
             return time_str  # Bereits im Format HH:MM:SS
 
 
+        
 
+        def normalize_time(text):
+            """
+            Erkenne unterschiedliche Zeitformate und normalisiere sie zu einem einheitlichen Format (HH:MM).
+            """
+            time_pattern = r'(\d{1,2})[:.](\d{2})'
+            matches = re.findall(time_pattern, text)
+            normalized_times = []
+            for match in matches:
+                hours, minutes = match
+                normalized_time = f"{int(hours):02d}:{int(minutes):02d}"
+                normalized_times.append(normalized_time)
+            return normalized_times
+        
+        def replace_synonyms(text, synonyms):
+
+            for standard_term, synonym_list in synonyms.items():
+                for synonym in synonym_list:
+                    # Ersetze das Synonym nur, wenn es ein vollständiges Wort ist
+                    pattern = rf'(?<!\w){re.escape(synonym)}(?!\w)'
+                    text = re.sub(pattern, standard_term, text, flags=re.IGNORECASE)
+                #print(text)
+            return text
+
+
+        def replace_time(text):
+            """
+            Erkenne unterschiedliche Zeitformate und normalisiere sie zu einem einheitlichen Format (HH:MM).
+            Gibt den Text mit normalisierten Zeiten zurück.
+            """
+            time_pattern = r'(\d{1,2})[:.](\d{2})'
+            
+            # Funktion, die für jeden gefundenen Treffer die normalisierte Zeit zurückgibt
+            def replace_with_normalized(match):
+                hours, minutes = match.groups()
+                normalized_time = f"{int(hours):02d}:{int(minutes):02d}"
+                return normalized_time
+
+            # Ersetze alle Zeitangaben im Text mit dem normalisierten Format
+            normalized_text = re.sub(time_pattern, replace_with_normalized, text)
+            
+            return normalized_text
+
+
+        # Hauptfunktion zur Textverarbeitung und Extraktion
+        def text_extraction(input_text, synonyms):
+
+            # Schritt 1: Entferne unerwünschte Zeichen wie ":" aus dem Text
+            cleaned_text = re.sub(r'[:]', '', input_text)
+
+            # Schritt 2: Normalisiere die Uhrzeiten
+            cleaned_text = replace_time(cleaned_text)
+
+            # Schritt 3: Ersetze die Synonyme im Text
+            normalized_text = replace_synonyms(cleaned_text, synonyms)
+
+            # Erstelle ein Muster, um die Uhrzeiten mit zugehörigen Daten zu finden
+            time_pattern =  r'(\d{1,2})[:.](\d{2})'
+            data_pattern = r'(\w+(?: \w+)?)(?:\s+(-?\d+(?:,\d+)?))'  # Muster für "Begriff Zahl"
+
+            # Initialisiere das Daten-Dictionary mit Zeiten
+            data_dict = {'Time': []}
+            features = list(synonyms.keys())
+            for feature in features:
+                data_dict[feature] = []
+
+            # Schritt 4: Iteriere über den Text und ordne die Werte den Uhrzeiten zu
+            current_time = None
+            for line in normalized_text.splitlines():
+                # Prüfe, ob die Zeile eine Uhrzeit enthält
+                time_match = re.findall(time_pattern, line)
+                #print(time_match)
+                if time_match:
+
+                #matches = re.findall(time_pattern, text)
+                    #normalized_times = []
+                    for match in time_match:
+                        hours, minutes = match
+                        current_time = f"{int(hours):02d}:{int(minutes):02d}"
+                        #normalized_times.append(normalized_time)
+
+                    #print(current_time)
+
+                    #current_time = time_match.group(1)  # Setze die aktuelle Uhrzeit
+                    data_dict['Time'].append(current_time)
+                    # Füge None für alle Features hinzu, um für die Uhrzeit Platz zu schaffen
+                    for feature in features:
+                        data_dict[feature].append(None)
+                elif current_time:
+                    # Wenn es keine Uhrzeit gibt, extrahiere die Begriffe und Werte
+                    data = re.findall(data_pattern, line)
+                    for term, value in data:
+                        term = term.strip()
+                        value = float(value.replace(',', '.'))  # Konvertiere zu float
+                        if term in features:
+                            # Aktualisiere den Wert für die letzte erkannte Uhrzeit
+                            data_dict[term][-1] = value
+
+            # Schritt 5: Erstelle den DataFrame
+            df = pd.DataFrame(data_dict)
+
+
+            def clean_dataset(df):
+                # Schritt 1: Entferne Zeilen, die komplett aus NaN bestehen
+                df_cleaned = df.dropna(axis=0, how='all')
+
+                # Schritt 2: Entferne Spalten, die nur einen Wert und ansonsten NaN enthalten
+                # Das gilt nur für die Spalten außer 'Time'
+                #first_row = df_cleaned.iloc[0].values.flatten().tolist()
+                #print(first_row)
+                #df_cleaned = df_cleaned.drop(df_cleaned.index[2]).reset_index(drop=True)
+                #df_cleaned = df_cleaned.drop(df_cleaned.index[0])
+                #df_cleaned = df_cleaned.drop(df_cleaned.index[0])
+                #non_time_columns = df_cleaned.columns.difference(['Time'])
+                
+                # Filter: Behalte nur die Spalten, die mindestens einen Nicht-NaN-Wert enthalten
+                df_cleaned = df_cleaned.dropna(axis=1, how='all')
+
+
+                non_time_rows = df_cleaned.index[df_cleaned.index != 'Time']
+
+                # Lösche Spalten, die nur NaN-Werte in non_time_rows haben
+                df_cleaned = df_cleaned.dropna(axis=1, how='all', subset=non_time_rows)
+
+
+                return df_cleaned
+            
+            df = clean_dataset(df.T)
+
+            return df.T
 
 
         #if st.button("Data input as PDF / Excel"):
