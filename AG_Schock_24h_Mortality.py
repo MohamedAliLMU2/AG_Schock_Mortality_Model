@@ -552,8 +552,9 @@ if uploaded_file is not None:
             return time_str  # Bereits im Format HH:MM:SS
 
 
+        #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
-        
+
         def replace_synonyms(text, synonyms):
 
             for standard_term, synonym_list in synonyms.items():
@@ -563,6 +564,11 @@ if uploaded_file is not None:
                     text = re.sub(pattern, standard_term, text, flags=re.IGNORECASE)
                 #print(text)
             return text
+
+                
+
+
+
 
 
         def replace_time(text):
