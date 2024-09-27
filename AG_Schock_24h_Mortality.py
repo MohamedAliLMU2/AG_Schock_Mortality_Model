@@ -348,17 +348,7 @@ if uploaded_file is not None:
                 
             #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
-            # Display SHAP explanation
-            st.write("""
-            ### How to Read the SHAP Waterfall Plot:
-            
-            - **Baseline**: The baseline represents the average predicted value.
-            - **Positive Values (Red)**: Features that increase the predicted value (towards mortality).
-            - **Negative Values (Blue)**: Features that decrease the predicted value (towards survival).
-            - **Arrows**: Indicate how much each feature contributes to the prediction.
-            
-            The waterfall plot helps you understand which features have the most significant impact on the prediction.
-            """)
+
 
 
 
