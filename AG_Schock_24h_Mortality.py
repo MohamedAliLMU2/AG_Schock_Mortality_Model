@@ -955,8 +955,8 @@ if uploaded_file is not None:
                 
                 st.write("**Prediction Value = 1** indicates that the patient is predicted to be **deceased**.")
                 st.write("**Prediction Value = 0** indicates that the patient is predicted to be **alive**.")
-                st.write("**Cohort 1** corresponds to predictions with **high accuracy**.")
-                st.write("**Cohort 2** corresponds to predictions with **lower accuracy**.")
+                #st.write("**Cohort 1** corresponds to predictions with **high accuracy**.")
+                #st.write("**Cohort 2** corresponds to predictions with **lower accuracy**.")
             else:
                 st.error("Please calculate the Weighted Means first!")
                     
