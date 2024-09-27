@@ -505,6 +505,7 @@ if uploaded_file is not None:
                                 if cell_value == '' or pd.isna(row[col]):  # Überprüfen auf leere Zellen oder NaN-Werte
                                     values.append(None)  # Füge `None` hinzu, um leere Zellen zu repräsentieren
                                 else:
+                                    cell_value = re.sub(r',', '.', cell_value)
                                     value_match = re.findall(r'(-?\d+\.?\d*)', cell_value)
                                     if value_match:  # Nur hinzufügen, wenn tatsächlich Werte gefunden wurden
                                         values.extend([float(val) for val in value_match])
