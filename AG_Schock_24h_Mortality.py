@@ -119,6 +119,7 @@ if uploaded_file is not None:
             
             
             st.write('### 24hours-Mortality Prediction')
+            st.write(X_test_full)
 
 
 
