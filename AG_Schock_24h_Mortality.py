@@ -142,11 +142,10 @@ if uploaded_file is not None:
 
                     
                     y_pred_proba = self.cohort1_model.predict_proba(X_test_full)[:, 1]
-                    st.write(y_pred_proba)
                     optimal_threshold = 0.5493
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.91 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next day:", y_pred)
+                    st.write("Mortality prediction for the next day:", y_pred[0])
                     #st.write("Mortality probability  for the next day:", y_pred_proba[0])
 
 
