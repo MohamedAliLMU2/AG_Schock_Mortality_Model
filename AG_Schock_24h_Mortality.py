@@ -389,7 +389,7 @@ if uploaded_file is not None:
             'leucoWeightedMean': ['leukozyten', 'leukocytes', 'white blood cells', 'WBC', 'Leukocytenzahl', 'Weiße Blutkörperchen', 'Leukos'],
             'ureaWeightedMean': ['harnstoff', 'urea', 'blood urea', 'Urea nitrogen', 'Harnstoffstickstoff', 'BUN', 'Harnstoffkonzentration'],
             'HRWeightedMean': ['herzfrequenz', 'heart rate', 'pulse', 'HR', 'Pulsfrequenz', 'Puls', 'Cardiac rate', 'Herzschlagfrequenz'],
-            'NaWeightedMean': ['Natrium', 'sodium', 'Na', 'Serumnatrium', 'Sodium level', 'Natriumspiegel', 'Natriumwert'],
+            'NaWeightedMean': ['Natrium (POC)','Natrium', 'sodium', 'Na', 'Serumnatrium', 'Sodium level', 'Natriumspiegel', 'Natriumwert'],
             'KWeightedMean': ['kalium', 'potassium', 'K', 'Serumkalium', 'Potassium level', 'Kaliumspiegel', 'Kaliumwert'],
             'ClWeightedMean': ['chlorid', 'chloride', 'Cl', 'Serumchlorid', 'Chloridspiegel', 'Chloridion', 'Chloridwert'],
             'Height': ['Height', 'Größe', 'Body height', 'Körpergröße', 'Stature', 'Länge', 'Körperlänge'],
