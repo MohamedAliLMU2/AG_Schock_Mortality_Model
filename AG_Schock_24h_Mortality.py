@@ -119,7 +119,6 @@ if uploaded_file is not None:
             
             
             st.write('### 24hours-Mortality Prediction')
-            st.write(X_test_full)
 
 
 
@@ -131,6 +130,7 @@ if uploaded_file is not None:
             y_pred_t_model = self.t_model.predict(df)
             y_pred_t_model = pd.Series(y_pred_t_model)
             y_pred_t_model.index = X_test_full.index
+            st.write(y_pred_t_model)
             
             #print(y_pred_t_model)
             
