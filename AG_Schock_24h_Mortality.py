@@ -130,7 +130,6 @@ if uploaded_file is not None:
             y_pred_t_model = self.t_model.predict(df)
             y_pred_t_model = pd.Series(y_pred_t_model)
             y_pred_t_model.index = X_test_full.index
-            st.write(y_pred_t_model)
             
             #print(y_pred_t_model)
             
@@ -143,6 +142,7 @@ if uploaded_file is not None:
 
                     
                     y_pred_proba = self.cohort1_model.predict_proba(X_test_full)[:, 1]
+                    st.write(y_pred_proba)
                     optimal_threshold = 0.5493
                     y_pred = (y_pred_proba >= optimal_threshold).astype(int)
                     st.write("The 24h-Mortality ist predicted with 0.91 ROC AUC (Accuracy)")
