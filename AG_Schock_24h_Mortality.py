@@ -137,29 +137,23 @@ if uploaded_file is not None:
             for index, pred in enumerate(y_pred_t_model):
                     
                 if pred == 0:
-                    #y_pred = self.cohort1_model.predict(X_test_full)
+                    y_pred = self.cohort1_model.predict(X_test_full)
 
-
+                    st.write("The patient belongs to: Cohort ", int(1))
+                    st.write("Mortality prediction for the next day:", y_pred[0])
                     
                     y_pred_proba = self.cohort1_model.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.5493
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-                    st.write("The 24h-Mortality ist predicted with 0.91 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next day:", y_pred)
-                    #st.write("Mortality probability  for the next day:", y_pred_proba[0])
+                    st.write("Mortality probability  for the next day:", y_pred_proba[0])
 
 
                 if pred == 1:
-                    #y_pred = self.cohort2_model.predict(X_test_full)
+                    y_pred = self.cohort2_model.predict(X_test_full)
 
-
-                    
-                    y_pred_proba = self.cohort2_model.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.5562
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-                    st.write("The 24h-Mortality ist predicted with 0.72 ROC AUC (Accuracy)")
+                    st.write("The patient belongs to: Cohort ", int(2))
                     st.write("Mortality prediction for the next day:", y_pred[0])
-                    #st.write("Mortality probability  for the next day:", y_pred_proba[0])
+                    
+                    y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
+                    st.write("Mortality probability  for the next day:", y_pred_proba[0])
                     
                     
             #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
@@ -181,28 +175,22 @@ if uploaded_file is not None:
             for index, pred in enumerate(y_pred_t_model):
                     
                 if pred == 0:
-                    #y_pred = self.cohort1_model_3d.predict(X_test_full)
+                    y_pred = self.cohort1_model_3d.predict(X_test_full)
 
-
+                    st.write("The patient belongs to: Cohort ", int(1))
+                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
 
                     y_pred_proba = self.cohort1_model_3d.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.4048
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-                    st.write("The 3d-Mortality ist predicted with 0.81 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
-                    #st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
+                    st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
                 if pred == 1:
-                    #y_pred = self.cohort2_model_3d.predict(X_test_full)
+                    y_pred = self.cohort2_model_3d.predict(X_test_full)
 
+                    st.write("The patient belongs to: Cohort ", int(2))
+                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
 
                     y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.8712
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-
-                    st.write("The 3d-Mortality ist predicted with 0.34 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
-                    #st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
+                    st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
 
 
             return y_pred, y_pred_proba
@@ -359,10 +347,10 @@ if uploaded_file is not None:
         # Synonym-Mapping für die Features in Deutsch und Englisch
         synonyms = {
             'AgeOnInclusion': ['Age', 'Alter', 'Years', 'Years of Age', 'Lebensalter'],
-            'RRSysWeightedMeanValue': ['systolischer Blutdruck', 'systolic blood pressure', 'systolic BP', 'blood pressure systolic', 'systolische Blutdruckmessung', 'RR systolisch', 'RRsys'],
-            'RRDiaWeightedMeanValue': ['diastolischer Blutdruck', 'diastolic blood pressure', 'diastolic BP', 'blood pressure diastolic', 'diastolische Blutdruckmessung', 'RR diastolisch', 'RRdia'],
+            'RRSysWeightedMeanValue': ['systolischer arterieller Blutdruck', 'systolischer Blutdruck', 'systolic blood pressure', 'systolic BP', 'blood pressure systolic', 'systolische Blutdruckmessung', 'RR systolisch', 'RRsys'],
+            'RRDiaWeightedMeanValue': ['diastolischer arterieller Blutdruck', 'diastolischer Blutdruck', 'diastolic blood pressure', 'diastolic BP', 'blood pressure diastolic', 'diastolische Blutdruckmessung', 'RR diastolisch', 'RRdia'],
             'sO2WeightedMeanValue': ['sauerstoffsättigung', 'oxygen saturation', 'SpO2', 'sO2', 'oxygen level', 'O2 sat', 'Sauerstofflevel', 'O2-Sättigung'],
-            'TempWeightedMean': ['körpertemperatur', 'body temperature', 'temp', 'temperature', 'core temperature', 'Körperwärme', 'Körpertemp'],
+            'TempWeightedMean': ['Körpertem peratur', 'körpertemperatur', 'body temperature', 'temp', 'temperature', 'core temperature', 'Körperwärme', 'Körpertemp'],
             'PHWeightedMean': ['ph', 'blood pH', 'pH level', 'pH-Wert', 'Säure-Basen-Status', 'Blut-pH'],
             'LactateWeightedMean': ['Lakt', 'laktatspiegel', 'lactate level', 'blood lactate', 'Laktat', 'Lactate', 'Serumlaktat', 'Laktatkonzentration'],
             'gluWeightedMean': ['Glu','blutzucker', 'blood glucose', 'glucose', 'Blutglukose', 'Blutzuckerspiegel', 'blood sugar', 'Glucoselevel', 'Glukosespiegel'],
@@ -384,28 +372,6 @@ if uploaded_file is not None:
 
 
 
-        feature_names = {
-                    'RRSysWeightedMeanValue': 'Systolic Blood Pressure (mmHg)',
-                    'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure (mmHg)',
-                    'sO2WeightedMeanValue': 'Oxygen Saturation (%)',
-                    'TempWeightedMean': 'Body Temperature (°C)',
-                    'PHWeightedMean': 'Blood pH',
-                    'LactateWeightedMean': 'Blood Lactate Level (mmol/L)',
-                    'gluWeightedMean': 'Blood Glucose Level (mg/dL)',
-                    'HCO3WeightedMean': 'Bicarbonate (HCO3) (mmol/L)',
-                    'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2) (mmHg)',
-                    'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2) (mmHg)',
-                    'HBWeightedMean': 'Hemoglobin (HB) (g/dl)',
-                    'leucoWeightedMean': 'Leukocytes (G/l)',
-                    'ureaWeightedMean': 'Blood Urea (mg/dl)',
-                    'HRWeightedMean': 'Heart Rate (BPM)',
-                    'NaWeightedMean': 'Sodium (Na+) (mmol/L)',
-                    'KWeightedMean': 'Potassium (K+) (mmol/L)',
-                    'ClWeightedMean': 'Chloride (Cl-) (mmol/L)',
-                    'plateletsWeightedMean': 'Platelets (G/l)'
-                }
-
-
 
 
         # Funktion zur Verarbeitung der hochgeladenen PDF-Datei
@@ -416,7 +382,6 @@ if uploaded_file is not None:
                 text += page.extract_text()
 
             return text
-
 
 
 
@@ -455,9 +420,9 @@ if uploaded_file is not None:
             result_df = pd.DataFrame(weighted_means, index=['WeightedMean']).transpose()
             
             return result_df
+        
 
-
-
+        #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
 
 
@@ -677,12 +642,28 @@ if uploaded_file is not None:
 
             return df.T
 
-
         #if st.button("Data input as PDF / Excel"):
 
-
-        #if 'values' not in st.session_state:
-        #    st.session_state['values'] = pd.DataFrame()
+        feature_names = {
+                    'RRSysWeightedMeanValue': 'Systolic Blood Pressure (mmHg)',
+                    'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure (mmHg)',
+                    'sO2WeightedMeanValue': 'Oxygen Saturation (%)',
+                    'TempWeightedMean': 'Body Temperature (°C)',
+                    'PHWeightedMean': 'Blood pH',
+                    'LactateWeightedMean': 'Blood Lactate Level (mmol/L)',
+                    'gluWeightedMean': 'Blood Glucose Level (mg/dL)',
+                    'HCO3WeightedMean': 'Bicarbonate (HCO3) (mmol/L)',
+                    'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2) (mmHg)',
+                    'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2) (mmHg)',
+                    'HBWeightedMean': 'Hemoglobin (HB) (g/dl)',
+                    'leucoWeightedMean': 'Leukocytes (G/l)',
+                    'ureaWeightedMean': 'Blood Urea (mg/dl)',
+                    'HRWeightedMean': 'Heart Rate (BPM)',
+                    'NaWeightedMean': 'Sodium (Na+) (mmol/L)',
+                    'KWeightedMean': 'Potassium (K+) (mmol/L)',
+                    'ClWeightedMean': 'Chloride (Cl-) (mmol/L)',
+                    'plateletsWeightedMean': 'Platelets (G/l)'
+        }
 
         # Frage, wie viele Dateien hochgeladen werden sollen
         num_files = st.number_input("How many files would you like to upload?", min_value=1, step=1, value=1)
@@ -710,7 +691,7 @@ if uploaded_file is not None:
                 all_dfs.append(extracted_df.T)
             
             #st.write(all_dfs)
-            
+
             # Alle DataFrames zusammenführen
             if all_dfs:
 
@@ -721,9 +702,8 @@ if uploaded_file is not None:
                 st.write("Combined DataFrame:")
 
                 # Verwende die lesbaren Feature-Namen für die Anzeige
-                display_df = st.session_state['values']
+                display_df = st.session_state['values'].rename(index=feature_names)
                 st.write(display_df)
-
 
 
 
@@ -774,8 +754,7 @@ if uploaded_file is not None:
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                display_df = weighted_means_df.T.rename(index=feature_names)
-                st.write(display_df)
+                st.write(weighted_means_df.T)
 
                         # Speichern in Session State
                 st.session_state['weighted_means_df'] = weighted_means_df
@@ -817,9 +796,8 @@ if uploaded_file is not None:
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                display_df = weighted_means_df.T.rename(index=feature_names)
-                st.write(display_df)
-                
+                st.write(weighted_means_df.T)
+
                         # Speichern in Session State
                 st.session_state['weighted_means_df'] = weighted_means_df
                 st.session_state['data_formatted'] = True
@@ -830,24 +808,24 @@ if uploaded_file is not None:
 
         # Mapping von technischen Namen zu verständlichen Bezeichnungen
         feature_names = {
-            'RRSysWeightedMeanValue': 'Systolic Blood Pressure (mmHg)',
-            'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure (mmHg)',
-            'sO2WeightedMeanValue': 'Oxygen Saturation (%)',
-            'TempWeightedMean': 'Body Temperature (°C)',
+            'RRSysWeightedMeanValue': 'Systolic Blood Pressure',
+            'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure',
+            'sO2WeightedMeanValue': 'Oxygen Saturation',
+            'TempWeightedMean': 'Body Temperature',
             'PHWeightedMean': 'Blood pH',
-            'LactateWeightedMean': 'Blood Lactate Level (mmol/L)',
-            'gluWeightedMean': 'Blood Glucose Level (mg/dL)',
-            'HCO3WeightedMean': 'Bicarbonate (HCO3) (mmol/L)',
-            'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2) (mmHg)',
-            'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2) (mmHg)',
-            'HBWeightedMean': 'Hemoglobin (HB) (g/dl)',
-            'leucoWeightedMean': 'Leukocytes (G/l)',
-            'ureaWeightedMean': 'Blood Urea (mg/dl)',
-            'HRWeightedMean': 'Heart Rate (BPM)',
-            'NaWeightedMean': 'Sodium (Na+) (mmol/L)',
-            'KWeightedMean': 'Potassium (K+) (mmol/L)',
-            'ClWeightedMean': 'Chloride (Cl-) (mmol/L)',
-            'plateletsWeightedMean': 'Platelets (G/l)'
+            'LactateWeightedMean': 'Blood Lactate Level',
+            'gluWeightedMean': 'Blood Glucose Level',
+            'HCO3WeightedMean': 'Bicarbonate (HCO3)',
+            'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2)',
+            'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2)',
+            'HBWeightedMean': 'Hemoglobin (HB)',
+            'leucoWeightedMean': 'Leukocytes',
+            'ureaWeightedMean': 'Blood Urea',
+            'HRWeightedMean': 'Heart Rate',
+            'NaWeightedMean': 'Sodium (Na+)',
+            'KWeightedMean': 'Potassium (K+)',
+            'ClWeightedMean': 'Chloride (Cl-)',
+            'plateletsWeightedMean': 'Platelets'
         }
 
         # Umgekehrtes Mapping, um später wieder auf die technischen Namen zuzugreifen
@@ -959,8 +937,8 @@ if uploaded_file is not None:
                 
                 st.write("**Prediction Value = 1** indicates that the patient is predicted to be **deceased**.")
                 st.write("**Prediction Value = 0** indicates that the patient is predicted to be **alive**.")
-                #st.write("**Cohort 1** corresponds to predictions with **high accuracy**.")
-                #st.write("**Cohort 2** corresponds to predictions with **lower accuracy**.")
+                st.write("**Cohort 1** corresponds to predictions with **high accuracy**.")
+                st.write("**Cohort 2** corresponds to predictions with **lower accuracy**.")
             else:
                 st.error("Please calculate the Weighted Means first!")
                     
@@ -1001,24 +979,24 @@ if uploaded_file is not None:
                     'plateletsWeightedMean']
 
                 permitted_range = {
-                    'RRSysWeightedMeanValue': [60, 150],
-                    'RRDiaWeightedMeanValue': [30, 110],
-                    'sO2WeightedMeanValue': [80, 100],
-                    'PHWeightedMean': [7.20, 7.60],
-                    'LactateWeightedMean': [0, 20],
-                    'gluWeightedMean': [40, 400],
-                    'HCO3WeightedMean': [15, 40],
-                    'PO2WeightedMean': [30, 500],
-                    'PCO2WeightedMean': [15, 200],
-                    'HBWeightedMean': [3, 20],
-                    'ureaWeightedMean': [5, 100],
-                    'HRWeightedMean': [40, 400],
-                    'TempWeightedMean': [34, 41],
-                    'NaWeightedMean': [60, 300],
-                    'KWeightedMean': [1, 9],
-                    'ClWeightedMean': [30, 400],
-                    'leucoWeightedMean': [1, 200],
-                    'plateletsWeightedMean': [5, 1000]}
+                    'RRSysWeightedMeanValue': [90, 150],
+                    'RRDiaWeightedMeanValue': [50, 90],
+                    'sO2WeightedMeanValue': [90, 100],
+                    'PHWeightedMean': [7.35, 7.45],
+                    'LactateWeightedMean': [0, 2],
+                    'gluWeightedMean': [60, 200],
+                    'HCO3WeightedMean': [22, 26],
+                    'PO2WeightedMean': [40, 100],
+                    'PCO2WeightedMean': [24, 40],
+                    'HBWeightedMean': [8, 15],
+                    'ureaWeightedMean': [15, 50],
+                    'HRWeightedMean': [60, 100],
+                    'TempWeightedMean': [36.5, 38],
+                    'NaWeightedMean': [130, 150],
+                    'KWeightedMean': [3.5, 5],
+                    'ClWeightedMean': [90, 110],
+                    'leucoWeightedMean': [5, 20],
+                    'plateletsWeightedMean': [150, 450]}
                 
 
                 # Benutzer wählt die Features aus, die er ändern möchte
@@ -1073,4 +1051,4 @@ if uploaded_file is not None:
                 
 
 
-    #excel import reparieren #seitenübergang reparieren # 3d model # zeit zum sterben model #LLM
+
