@@ -921,26 +921,12 @@ if uploaded_file is not None:
                                     'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
                                     'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
                                     'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                                     'leucoWeightedMean' ,'HighestLactate', 'LowestpH',
-                                ]
-
-                features_names_Weighted_mean = [
-                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
-                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
-                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
-                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
-                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
-                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
-                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
                                      'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
                                 ]
 
-                features_names_highest = [
-                                    'HighestLactate', 
-                                ]
-                features_names_lowest = [
-                                    'LowestpH',
-                                ]
+
+
+
                 
                 # Prüfe, welche Spalten in editable_df fehlen
                 missing_cols = [col for col in features_names if col not in editable_df.index]
@@ -966,126 +952,115 @@ if uploaded_file is not None:
                 st.session_state['values'] = edited_df
                         
 
-                        
-                weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                weighted_means_df = weighted_means_df[features_names_Weighted_mean]
-                weighted_means_df = weighted_means_df.astype(float)
 
                         
-                highest_df = calculate_highest_values(st.session_state['values']).T
-                highest_df['HighestLactate'] = highest_df['LactateWeightedMean']
 
-
-                        
-                lowest_df = calculate_lowest_values(st.session_state['values']).T
-                lowest_df['LowestpH'] = lowest_df['PHWeightedMean']
-                #lowest_df = lowest_df[features_names_lowest]
-
-
-
-                # Indizes von highest_df und lowest_df anpassen, um Konflikte zu vermeiden
-                highest_df.index = weighted_means_df.index
-                lowest_df.index = weighted_means_df.index
-
-                weighted_means_df['HighestLactate']  = highest_df['HighestLactate'] 
-                
-                weighted_means_df['LowestpH']  = lowest_df['LowestpH'] 
-                weighted_means_df = weighted_means_df.astype(float)
-                #weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
-
-                # Ergebnis für das Modell vorbereiten
-                st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                st.write(weighted_means_df.T)
-
-                        # Speichern in Session State
-                st.session_state['weighted_means_df'] = weighted_means_df
-                st.session_state['data_formatted'] = True
 
             
             if Input_modify == "no": 
+
+                thanks = "thanks"
                 
-                # Erstelle ein DataFrame mit den importierten Werten
-                editable_df = st.session_state['values'].copy()
+            #################
+            # Erstelle ein DataFrame mit den importierten Werten
+            editable_df = st.session_state['values'].copy()
 
-                features_names = [
-                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
-                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
-                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
-                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
-                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
-                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
-                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                                     'leucoWeightedMean' ,'HighestLactate', 'LowestpH',
-                                ]
+            features_names = [
+                                'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                    'leucoWeightedMean' ,'HighestLactate', 'LowestpH',
+                            ]
 
-                features_names_Weighted_mean = [
-                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
-                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
-                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
-                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
-                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
-                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
-                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                                     'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
-                                ]
+            features_names_Weighted_mean = [
+                                'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                    'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
+                            ]
 
-                features_names_highest = [
-                                    'HighestLactate', 
-                                ]
-                features_names_lowest = [
-                                    'LowestpH',
-                                ]
-                
-                # Prüfe, welche Spalten in editable_df fehlen
-                missing_cols = [col for col in features_names if col not in editable_df.index]
+            features_names_highest = [
+                                'HighestLactate', 
+                            ]
+            features_names_lowest = [
+                                'LowestpH',
+                            ]
+            
+            # Prüfe, welche Spalten in editable_df fehlen
+            missing_cols = [col for col in features_names if col not in editable_df.index]
 
-                # Füge fehlende Indizes mit NaN-Werten hinzu
-                if missing_cols:
-                    for col in missing_cols:
-                        editable_df.loc[col] = None
+            # Füge fehlende Indizes mit NaN-Werten hinzu
+            if missing_cols:
+                for col in missing_cols:
+                    editable_df.loc[col] = None
 
-                # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                edited_df = editable_df.copy()
-                
-                # Speichere die bearbeiteten Daten zurück in den Session State
-                st.session_state['values'] = edited_df
-                        
+            ######################
 
-                        
-                weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                weighted_means_df = weighted_means_df[features_names_Weighted_mean]
-                weighted_means_df = weighted_means_df.astype(float)
+            weighted_means_df = calculate_weighted_means(st.session_state['values']).T
+            weighted_means_df = weighted_means_df[features_names_Weighted_mean]
+            weighted_means_df = weighted_means_df.astype(float)
 
-                        
-                highest_df = calculate_highest_values(st.session_state['values']).T
-                highest_df['HighestLactate'] = highest_df['LactateWeightedMean']
+                    
+            highest_df = calculate_highest_values(st.session_state['values']).T
+            highest_df['HighestLactate'] = highest_df['LactateWeightedMean']
 
 
-                        
-                lowest_df = calculate_lowest_values(st.session_state['values']).T
-                lowest_df['LowestpH'] = lowest_df['PHWeightedMean']
-                #lowest_df = lowest_df[features_names_lowest]
+                    
+            lowest_df = calculate_lowest_values(st.session_state['values']).T
+            lowest_df['LowestpH'] = lowest_df['PHWeightedMean']
+            #lowest_df = lowest_df[features_names_lowest]
 
 
 
-                # Indizes von highest_df und lowest_df anpassen, um Konflikte zu vermeiden
-                highest_df.index = weighted_means_df.index
-                lowest_df.index = weighted_means_df.index
+            # Indizes von highest_df und lowest_df anpassen, um Konflikte zu vermeiden
+            highest_df.index = weighted_means_df.index
+            lowest_df.index = weighted_means_df.index
 
-                weighted_means_df['HighestLactate']  = highest_df['HighestLactate'] 
-                
-                weighted_means_df['LowestpH']  = lowest_df['LowestpH'] 
-                weighted_means_df = weighted_means_df.astype(float)
-                #weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+            weighted_means_df['HighestLactate']  = highest_df['HighestLactate'] 
+            
+            weighted_means_df['LowestpH']  = lowest_df['LowestpH'] 
+            weighted_means_df = weighted_means_df.astype(float)
+            #weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+
+            # Ergebnis für das Modell vorbereiten
+            st.write("Berechnete Werte, die ans Modell geschickt werden:")
+            st.write(weighted_means_df.T)
+
+            col_names = [
+                            'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                            'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                            'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                            'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                            'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                            'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                            'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                            'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                        ]
+            
+            weighted_means_df = weighted_means_df[col_names]
+
+                    # Speichern in Session State
+            st.session_state['weighted_means_df'] = weighted_means_df
+            st.session_state['data_formatted'] = True
+
+            
 
 
-                        # Ergebnis für das Modell vorbereiten
-                st.write("Berechnete Werte, die ans Modell geschickt werden:")
-                st.write(weighted_means_df.T)
+            # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
+            edited_df = editable_df.copy()
+            
+            # Speichere die bearbeiteten Daten zurück in den Session State
+            st.session_state['values'] = edited_df
+                    
 
-                        # Speichern in Session State
-                st.session_state['weighted_means_df'] = weighted_means_df
-                st.session_state['data_formatted'] = True
 
 
 
