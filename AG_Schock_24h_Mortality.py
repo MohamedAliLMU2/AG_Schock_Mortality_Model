@@ -953,24 +953,30 @@ if uploaded_file is not None:
         #if st.button("Data input as PDF / Excel"):
 
         feature_names = {
-                    'RRSysWeightedMeanValue': 'Systolic Blood Pressure (mmHg)',
-                    'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure (mmHg)',
-                    'sO2WeightedMeanValue': 'Oxygen Saturation (%)',
-                    'TempWeightedMean': 'Body Temperature (°C)',
-                    'PHWeightedMean': 'Blood pH',
-                    'LactateWeightedMean': 'Blood Lactate Level (mmol/L)',
-                    'gluWeightedMean': 'Blood Glucose Level (mg/dL)',
-                    'HCO3WeightedMean': 'Bicarbonate (HCO3) (mmol/L)',
-                    'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2) (mmHg)',
-                    'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2) (mmHg)',
-                    'HBWeightedMean': 'Hemoglobin (HB) (g/dl)',
-                    'leucoWeightedMean': 'Leukocytes (G/l)',
-                    'ureaWeightedMean': 'Blood Urea (mg/dl)',
-                    'HRWeightedMean': 'Heart Rate (BPM)',
-                    'NaWeightedMean': 'Sodium (Na+) (mmol/L)',
-                    'KWeightedMean': 'Potassium (K+) (mmol/L)',
-                    'ClWeightedMean': 'Chloride (Cl-) (mmol/L)',
-                    'plateletsWeightedMean': 'Platelets (G/l)'
+            'RRSysWeightedMeanValue': 'Systolic Blood Pressure',
+            'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure',
+            'sO2WeightedMeanValue': 'Oxygen Saturation',
+            'TempWeightedMean': 'Body Temperature',
+            'PHWeightedMean': 'Blood pH',
+            'LactateWeightedMean': 'Blood Lactate Level',
+            'gluWeightedMean': 'Blood Glucose Level',
+            'HCO3WeightedMean': 'Bicarbonate (HCO3)',
+            'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2)',
+            'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2)',
+            'HBWeightedMean': 'Hemoglobin (HB)',
+            'leucoWeightedMean': 'Leukocytes',
+            'ureaWeightedMean': 'Blood Urea',
+            'HRWeightedMean': 'Heart Rate',
+            'NaWeightedMean': 'Sodium (Na+)',
+            'KWeightedMean': 'Potassium (K+)',
+            'ClWeightedMean': 'Chloride (Cl-)',
+            'plateletsWeightedMean': 'Platelets',
+            'AgeOnInclusion': 'Age at Inclusion',
+            'DayNumber': 'Day Number',
+            'Height': 'Height (cm)',
+            'Weight': 'Weight (kg)',
+            'HighestLactate': 'Highest Lactate Level',
+            'LowestpH': 'Lowest Blood pH'
         }
 
         # Frage, wie viele Dateien hochgeladen werden sollen
@@ -1023,13 +1029,16 @@ if uploaded_file is not None:
                 # Erstelle ein DataFrame mit den importierten Werten
                 editable_df = st.session_state['values'].copy()
 
-                features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                                    'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                                    'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                                    'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                                    'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                                    'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                                    'Height', 'Weight', 'plateletsWeightedMean']
+                features_names = [
+                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                    'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                                ]
                 
                 # Prüfe, welche Spalten in editable_df fehlen
                 missing_cols = [col for col in features_names if col not in editable_df.index]
@@ -1074,13 +1083,16 @@ if uploaded_file is not None:
                 # Erstelle ein DataFrame mit den importierten Werten
                 editable_df = st.session_state['values'].copy()
 
-                features_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                                    'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                                    'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                                    'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                                    'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                                    'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                                    'Height', 'Weight', 'plateletsWeightedMean']
+                features_names = [
+                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                    'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                                ]
                 
                 # Prüfe, welche Spalten in editable_df fehlen
                 missing_cols = [col for col in features_names if col not in editable_df.index]
@@ -1133,8 +1145,15 @@ if uploaded_file is not None:
             'NaWeightedMean': 'Sodium (Na+)',
             'KWeightedMean': 'Potassium (K+)',
             'ClWeightedMean': 'Chloride (Cl-)',
-            'plateletsWeightedMean': 'Platelets'
+            'plateletsWeightedMean': 'Platelets',
+            'AgeOnInclusion': 'Age at Inclusion',
+            'DayNumber': 'Day Number',
+            'Height': 'Height (cm)',
+            'Weight': 'Weight (kg)',
+            'HighestLactate': 'Highest Lactate Level',
+            'LowestpH': 'Lowest Blood pH'
         }
+
 
         # Umgekehrtes Mapping, um später wieder auf die technischen Namen zuzugreifen
         reverse_feature_names = {v: k for k, v in feature_names.items()}
@@ -1204,13 +1223,16 @@ if uploaded_file is not None:
         weighted_means_df['Weight'] = weight
         weighted_means_df['DayNumber'] = day_number
         
-        col_names = ['AgeOnInclusion', 'RRSysWeightedMeanValue', 'RRDiaWeightedMeanValue',
-                    'sO2WeightedMeanValue', 'PHWeightedMean', 'LactateWeightedMean',
-                    'gluWeightedMean', 'HCO3WeightedMean', 'DayNumber',
-                    'PO2WeightedMean', 'PCO2WeightedMean', 'HBWeightedMean',
-                    'leucoWeightedMean', 'ureaWeightedMean', 'HRWeightedMean',
-                    'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean', 'ClWeightedMean',
-                    'Height', 'Weight', 'plateletsWeightedMean']
+        col_names = [
+                        'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                        'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                        'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                        'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                        'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                        'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                        'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                        'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                    ]
         
         weighted_means_df = weighted_means_df[col_names]
 
