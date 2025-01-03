@@ -907,40 +907,43 @@ if uploaded_file is not None:
 
 
         if 'values' in st.session_state:
+
+            # Erstelle ein DataFrame mit den importierten Werten
+            editable_df = st.session_state['values'].copy()
+
+            features_names = [
+                                'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                    'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
+                            ]
+
+
+
+
+            
+            # Prüfe, welche Spalten in editable_df fehlen
+            missing_cols = [col for col in features_names if col not in editable_df.index]
+
+            # Füge fehlende Indizes mit NaN-Werten hinzu
+            if missing_cols:
+                for col in missing_cols:
+                    editable_df.loc[col] = None
+
+            editable_df = editable_df.reset_index()
+
+            # Index in eine reguläre Spalte umwandeln
+            #editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
+            editable_df = pd.DataFrame(editable_df.values, columns=['Feature'] + editable_df.columns[1:].tolist())
+
+
             Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
             if Input_modify == "yes": 
             
-                # Erstelle ein DataFrame mit den importierten Werten
-                editable_df = st.session_state['values'].copy()
-
-                features_names = [
-                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
-                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
-                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
-                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
-                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
-                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
-                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                                     'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
-                                ]
-
-
-
-
-                
-                # Prüfe, welche Spalten in editable_df fehlen
-                missing_cols = [col for col in features_names if col not in editable_df.index]
-
-                # Füge fehlende Indizes mit NaN-Werten hinzu
-                if missing_cols:
-                    for col in missing_cols:
-                        editable_df.loc[col] = None
-
-                editable_df = editable_df.reset_index()
-
-                # Index in eine reguläre Spalte umwandeln
-                #editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
-                editable_df = pd.DataFrame(editable_df.values, columns=['Feature'] + editable_df.columns[1:].tolist())
 
             
 
@@ -962,7 +965,7 @@ if uploaded_file is not None:
 
                 thanks = "thanks"
                 
-            #################
+            
             # Erstelle ein DataFrame mit den importierten Werten
             editable_df = st.session_state['values'].copy()
 
@@ -1003,7 +1006,6 @@ if uploaded_file is not None:
                 for col in missing_cols:
                     editable_df.loc[col] = None
 
-            ######################
 
             weighted_means_df = calculate_weighted_means(st.session_state['values']).T
             weighted_means_df = weighted_means_df[features_names_Weighted_mean]
