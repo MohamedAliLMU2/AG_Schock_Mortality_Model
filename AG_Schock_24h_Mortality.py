@@ -624,7 +624,7 @@ if uploaded_file is not None:
 
 
     # Modell initialisieren
-    model = model_24h_mortality(t_model, cohort1_model, scaler, cohort2_model, exp1, exp2)
+    model = model_24h_mortality()
     st.session_state['model'] = model
     
     st.session_state['data_formatted'] = False
