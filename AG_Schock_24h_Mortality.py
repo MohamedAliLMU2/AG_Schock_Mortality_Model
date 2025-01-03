@@ -1056,20 +1056,21 @@ if uploaded_file is not None:
                         
                 highest_df = calculate_highest_values(st.session_state['values']).T
                 highest_df['HighestLactate'] = highest_df['LactateWeightedMean']
-                highest_df = highest_df[features_names_highest]
-                highest_df = highest_df.astype(float)
+                weighted_means_df['HighestLactate']  = highest_df['HighestLactate'] 
+                weighted_means_df = weighted_means_df.astype(float)
 
                         
                 lowest_df = calculate_lowest_values(st.session_state['values']).T
                 lowest_df['LowestpH'] = lowest_df['PHWeightedMean']
-                lowest_df = lowest_df[features_names_lowest]
-                lowest_df = lowest_df.astype(float)
+                #lowest_df = lowest_df[features_names_lowest]
+                weighted_means_df['LowestpH']  = lowest_df['LowestpH'] 
+                weighted_means_df = weighted_means_df.astype(float)
 
                 # Indizes von highest_df und lowest_df anpassen, um Konflikte zu vermeiden
-                highest_df.index = [f"{idx}_Highest" for idx in highest_df.index]
-                lowest_df.index = [f"{idx}_Lowest" for idx in lowest_df.index]
+                #highest_df.index = [f"{idx}_Highest" for idx in highest_df.index]
+                #lowest_df.index = [f"{idx}_Lowest" for idx in lowest_df.index]
 
-                weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+                #weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
 
 
                         # Ergebnis für das Modell vorbereiten
