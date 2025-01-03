@@ -317,7 +317,7 @@ if uploaded_file is not None:
 
                 # Speichere das Ergebnis mit AUC-Wert anstelle von Kohorte
                 results.append({
-                    "Day": f"Day {day}",
+                    "Day": f"day {day}",
                     "Mortality_Probability": pred_proba[0],
                     "Prediction": prediction[0],
                     "Subgroup" : cohort,
@@ -344,7 +344,7 @@ if uploaded_file is not None:
                     prediction_text = "The patient is most likely to survive"
                     
                 # Große, auffällige Schrift mit Markdown und HTML
-                st.header("**Most Likely Outcome for the Patient:**")
+                #st.header("**Most Likely Outcome for the Patient:**")
                 st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till {best_day} (AUC: {best_auc:.2f}).</h2>", unsafe_allow_html=True)
 
 
@@ -443,35 +443,18 @@ if uploaded_file is not None:
             
             
         
-        def generate_counterfactuals(self, X_test, total_CFs=5, desired_class=0, features_to_vary=None, permitted_range=None):
+        def generate_counterfactuals(self, df_input, total_CFs=5, desired_class=0, features_to_vary=None, permitted_range=None):
             if features_to_vary is None:
                 features_to_vary = []
             if permitted_range is None:
                 permitted_range = {}
 
-            df = self.scaler.transform(X_test)
-            df = pd.DataFrame(df, columns=['PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
-                                        'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
-                                        'PC21', 'PC22'])
+            for index, pred in enumerate(df_input.index):
+                e1 = self.exp_dice.generate_counterfactuals(df_input, total_CFs=total_CFs, desired_class=desired_class, features_to_vary=features_to_vary, permitted_range=permitted_range)
+                e1.visualize_as_dataframe(show_only_changes=True)
+                result_df = e1.cf_examples_list[0].final_cfs_df
+                result_df = pd.DataFrame(result_df)
 
-            y_pred_t_model = self.t_model.predict(df)
-            y_pred_t_model = pd.Series(y_pred_t_model)
-            y_pred_t_model.index = X_test.index
-
-            for index, pred in enumerate(y_pred_t_model):
-                if pred == 0:
-                    #print("The Patient belongs to cluster 1")
-                    e1 = self.exp1.generate_counterfactuals(X_test, total_CFs=total_CFs, desired_class=desired_class, features_to_vary=features_to_vary, permitted_range=permitted_range)
-                    e1.visualize_as_dataframe(show_only_changes=True)
-                    result_df = e1.cf_examples_list[0].final_cfs_df
-                    result_df = pd.DataFrame(result_df)
-
-                if pred == 1:
-                    #print("The Patient belongs to cluster 2")
-                    e1 = self.exp2.generate_counterfactuals(X_test, total_CFs=total_CFs, desired_class=desired_class, features_to_vary=features_to_vary, permitted_range=permitted_range)
-                    e1.visualize_as_dataframe(show_only_changes=True)
-                    result_df = e1.cf_examples_list[0].final_cfs_df
-                    result_df = pd.DataFrame(result_df)
 
             return result_df
 
