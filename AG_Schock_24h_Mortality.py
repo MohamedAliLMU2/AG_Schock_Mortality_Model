@@ -497,7 +497,8 @@ if uploaded_file is not None:
             'ClWeightedMean': ['chlorid', 'chloride', 'Cl', 'Serumchlorid', 'Chloridspiegel', 'Chloridion', 'Chloridwert'],
             'Height': ['Height', 'Größe', 'Body height', 'Körpergröße', 'Stature', 'Länge', 'Körperlänge'],
             'Weight': ['Weight', 'Gewicht', 'Body weight', 'Körpergewicht', 'Mass', 'Masse'],
-            'plateletsWeightedMean': ['thrombozyten', 'platelets', 'Thrombocytes', 'Plättchen', 'Platelet count', 'Thrombozytenzahl', 'Blutplättchen']
+            'plateletsWeightedMean': ['thrombozyten', 'platelets', 'Thrombocytes', 'Plättchen', 'Platelet count', 'Thrombozytenzahl', 'Blutplättchen'],
+            'CreatinineWeightedMean': ['creatinine', 'kreatinin', 'Serumkreatinin', 'blood creatinine', 'crea', 'Kreatinspiegel', 'Creatinine level']
         }
 
 
@@ -550,6 +551,66 @@ if uploaded_file is not None:
             result_df = pd.DataFrame(weighted_means, index=['WeightedMean']).transpose()
             
             return result_df
+
+        def calculate_highest_values(df):
+            # Überprüfen, ob die 'Time'-Zeile vorhanden ist
+            if 'Time' not in df.index:
+                raise KeyError("'Time'-row is not in the DataFrame.")
+            
+            # Zeitstempel extrahieren
+            times = df.loc['Time'].values
+            # Entfernen der 'Time'-Zeile aus dem DataFrame
+            df = df.drop(index='Time')
+            
+            highest_values = {}
+            
+            # Durch alle Features (Zeilen) iterieren
+            for feature in df.index:
+                # Datenbereinigung und Umwandlung in numerische Werte
+                values = pd.to_numeric(df.loc[feature], errors='coerce')  # Umwandlung und Ersetzung von Fehlern durch NaN
+                
+                if values.notna().sum() > 0:  # Überprüfen, ob es gültige Werte gibt
+                    # Berechnung des höchsten Werts, ignoriert NaN-Werte
+                    highest_value = values.max()  
+                    highest_values[feature] = highest_value
+                else:
+                    highest_values[feature] = np.nan  # Wenn es keine Daten gibt, NaN zurückgeben
+            
+            # In eine Tabelle umwandeln (DataFrame)
+            result_df = pd.DataFrame(highest_values, index=['HighestValue']).transpose()
+            
+            return result_df
+
+        def calculate_lowest_values(df):
+            # Überprüfen, ob die 'Time'-Zeile vorhanden ist
+            if 'Time' not in df.index:
+                raise KeyError("'Time'-row is not in the DataFrame.")
+            
+            # Zeitstempel extrahieren
+            times = df.loc['Time'].values
+            # Entfernen der 'Time'-Zeile aus dem DataFrame
+            df = df.drop(index='Time')
+            
+            lowest_values = {}
+            
+            # Durch alle Features (Zeilen) iterieren
+            for feature in df.index:
+                # Datenbereinigung und Umwandlung in numerische Werte
+                values = pd.to_numeric(df.loc[feature], errors='coerce')  # Umwandlung und Ersetzung von Fehlern durch NaN
+                
+                if values.notna().sum() > 0:  # Überprüfen, ob es gültige Werte gibt
+                    # Berechnung des niedrigsten Werts, ignoriert NaN-Werte
+                    lowest_value = values.min()
+                    lowest_values[feature] = lowest_value
+                else:
+                    lowest_values[feature] = np.nan  # Wenn es keine Daten gibt, NaN zurückgeben
+            
+            # In eine Tabelle umwandeln (DataFrame)
+            result_df = pd.DataFrame(lowest_values, index=['LowestValue']).transpose()
+            
+            return result_df
+
+
         
 
         #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
@@ -798,8 +859,8 @@ if uploaded_file is not None:
             'DayNumber': 'Day Number',
             'Height': 'Height (cm)',
             'Weight': 'Weight (kg)',
-            'HighestLactate': 'Highest Lactate Level',
-            'LowestpH': 'Lowest Blood pH'
+            #'HighestLactate': 'Highest Lactate Level',
+            #'LowestpH': 'Lowest Blood pH'
         }
 
         # Frage, wie viele Dateien hochgeladen werden sollen
@@ -860,7 +921,25 @@ if uploaded_file is not None:
                                     'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
                                     'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
                                     'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                                    'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                                     'leucoWeightedMean' ,'HighestLactate', 'LowestpH',
+                                ]
+
+                features_names_Weighted_mean = [
+                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                     'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
+                                ]
+
+                features_names_highest = [
+                                    'HighestLactate', 
+                                ]
+                features_names_lowest = [
+                                    'LowestpH',
                                 ]
                 
                 # Prüfe, welche Spalten in editable_df fehlen
@@ -889,8 +968,27 @@ if uploaded_file is not None:
 
                         
                 weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                weighted_means_df = weighted_means_df[features_names]
+                weighted_means_df = weighted_means_df[features_names_Weighted_mean]
                 weighted_means_df = weighted_means_df.astype(float)
+
+                        
+                highest_df = calculate_highest_values(st.session_state['values']).T
+                highest_df['HighestLactate'] = highest_df['LactateWeightedMean']
+                highest_df = highest_df[features_names_highest]
+                highest_df = highest_df.astype(float)
+
+                        
+                lowest_df = calculate_lowest_values(st.session_state['values']).T
+                lowest_df['LowestpH'] = lowest_df['PHWeightedMean']
+                lowest_df = lowest_df[features_names_lowest]
+                lowest_df = lowest_df.astype(float)
+
+                # Indizes von highest_df und lowest_df anpassen, um Konflikte zu vermeiden
+                highest_df.index = [f"{idx}_Highest" for idx in highest_df.index]
+                lowest_df.index = [f"{idx}_Lowest" for idx in lowest_df.index]
+
+                weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
@@ -914,7 +1012,25 @@ if uploaded_file is not None:
                                     'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
                                     'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
                                     'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                                    'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                                     'leucoWeightedMean' ,'HighestLactate', 'LowestpH',
+                                ]
+
+                features_names_Weighted_mean = [
+                                    'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                                    'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                                    'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                                    'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                                    'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                                    'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                                    'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                                     'leucoWeightedMean' #,'HighestLactate', 'LowestpH',
+                                ]
+
+                features_names_highest = [
+                                    'HighestLactate', 
+                                ]
+                features_names_lowest = [
+                                    'LowestpH',
                                 ]
                 
                 # Prüfe, welche Spalten in editable_df fehlen
@@ -934,8 +1050,27 @@ if uploaded_file is not None:
 
                         
                 weighted_means_df = calculate_weighted_means(st.session_state['values']).T
-                weighted_means_df = weighted_means_df[features_names]
+                weighted_means_df = weighted_means_df[features_names_Weighted_mean]
                 weighted_means_df = weighted_means_df.astype(float)
+
+                        
+                highest_df = calculate_highest_values(st.session_state['values']).T
+                highest_df['HighestLactate'] = highest_df['LactateWeightedMean']
+                highest_df = highest_df[features_names_highest]
+                highest_df = highest_df.astype(float)
+
+                        
+                lowest_df = calculate_lowest_values(st.session_state['values']).T
+                lowest_df['LowestpH'] = lowest_df['PHWeightedMean']
+                lowest_df = lowest_df[features_names_lowest]
+                lowest_df = lowest_df.astype(float)
+
+                # Indizes von highest_df und lowest_df anpassen, um Konflikte zu vermeiden
+                highest_df.index = [f"{idx}_Highest" for idx in highest_df.index]
+                lowest_df.index = [f"{idx}_Lowest" for idx in lowest_df.index]
+
+                weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+
 
                         # Ergebnis für das Modell vorbereiten
                 st.write("Berechnete Werte, die ans Modell geschickt werden:")
@@ -951,7 +1086,7 @@ if uploaded_file is not None:
 
         # Mapping von technischen Namen zu verständlichen Bezeichnungen
         feature_names = {
-            'AgeOnInclusion': 'Age at Inclusion',
+            #'AgeOnInclusion': 'Age at Inclusion',
             'RRSysWeightedMeanValue': 'Systolic Blood Pressure',
             'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure',
             'sO2WeightedMeanValue': 'Oxygen Saturation',
@@ -960,7 +1095,7 @@ if uploaded_file is not None:
             'gluWeightedMean': 'Blood Glucose Level',
             'HCO3WeightedMean': 'Bicarbonate (HCO3)',
             'CreatinineWeightedMean': 'Creatinine Level',
-            'DayNumber': 'Day Number',
+            #'DayNumber': 'Day Number',
             'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2)',
             'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2)',
             'HBWeightedMean': 'Hemoglobin (HB)',
@@ -970,8 +1105,8 @@ if uploaded_file is not None:
             'NaWeightedMean': 'Sodium (Na+)',
             'KWeightedMean': 'Potassium (K+)',
             'ClWeightedMean': 'Chloride (Cl-)',
-            'Height': 'Height (cm)',
-            'Weight': 'Weight (kg)',
+            #'Height': 'Height (cm)',
+            #'Weight': 'Weight (kg)',
             'plateletsWeightedMean': 'Platelets',
             'HighestLactate': 'Highest Lactate Level',
             'LowestpH': 'Lowest Blood pH',
