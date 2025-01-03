@@ -201,6 +201,9 @@ if uploaded_file is not None:
                         
             with zip_ref.open('optimal_thresholds.pkl') as file:
                 optimal_thresholds = pickle.load(file)
+                
+            with zip_ref.open('auc_roc_dict.pkl') as file:
+                auc_roc_dict = pickle.load(file)
 
     
         st.success("Models loaded successfully!")
@@ -233,7 +236,7 @@ if uploaded_file is not None:
                     s_model_14d=s_model_2w, p_model_14d=p_model_2w, scaler_14d=scaler_2w,
                     s_model_15d=s_model_15d, p_model_15d=p_model_15d, scaler_15d=scaler_15d,
                     s_model_3w=s_model_3w, p_model_3w=p_model_3w, scaler_3w=scaler_3w,
-                    optimal_thresholds=optimal_thresholds, exp_dice=exp_dice):
+                    optimal_thresholds=optimal_thresholds, exp_dice=exp_dice, auc_roc_dict=auc_roc_dict):
             
             # Speichern der Modelle und Schwellenwerte für spätere Verwendung
             self.models = {
@@ -254,120 +257,30 @@ if uploaded_file is not None:
                 15: {'model': s_model_15d, 'outlier_model': p_model_15d, 'scaler': scaler_15d},
                 21: {'model': s_model_3w, 'outlier_model': p_model_3w, 'scaler': scaler_3w}
             }
-
+            
+            self.p_model_24h = p_model_24h
+            self.p_model_15d = p_model_15d
 
             # Experiment-Dice Modell
             self.optimal_thresholds = optimal_thresholds
             self.exp_dice = exp_dice
+            self.auc_roc_dict = auc_roc_dict
             
 
 
 
-        def predict(self, X_test_full):
-            
-            
-            st.write('### 24hours-Mortality Prediction')
-
-
-
-            df = self.scaler.transform(X_test_full)
-            df = pd.DataFrame(df, columns=['PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
-                                            'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
-                                            'PC21', 'PC22'])
-
-            y_pred_t_model = self.t_model.predict(df)
-            y_pred_t_model = pd.Series(y_pred_t_model)
-            y_pred_t_model.index = X_test_full.index
-            
-            #print(y_pred_t_model)
-            
-            
-            for index, pred in enumerate(y_pred_t_model):
-                    
-                if pred == 0:
-                    #y_pred = self.cohort1_model.predict(X_test_full)
-
-
-                    
-                    y_pred_proba = self.cohort1_model.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.5493
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-                    st.write("The 24h-Mortality ist predicted with 0.91 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next day:", y_pred[0])
-                    #st.write("Mortality probability  for the next day:", y_pred_proba[0])
-
-
-                if pred == 1:
-                    #y_pred = self.cohort2_model.predict(X_test_full)
-
-
-                    
-                    y_pred_proba = self.cohort2_model.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.5562
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-                    st.write("The 24h-Mortality ist predicted with 0.72 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next day:", y_pred[0])
-                    #st.write("Mortality probability  for the next day:", y_pred_proba[0])
-                    
-                    
-            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
-                    
-            st.write('### 3days-Mortality Prediction')
-                    
-            df = self.scaler_3d.transform(X_test_full)
-            df = pd.DataFrame(df, columns=['PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
-                                            'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
-                                            'PC21', 'PC22'])
-
-            y_pred_t_model = self.t_model_3d.predict(df)
-            y_pred_t_model = pd.Series(y_pred_t_model)
-            y_pred_t_model.index = X_test_full.index
-            
-            #print(y_pred_t_model)
-            
-            
-            for index, pred in enumerate(y_pred_t_model):
-                    
-                if pred == 0:
-                    #y_pred = self.cohort1_model_3d.predict(X_test_full)
-
-
-
-                    y_pred_proba = self.cohort1_model_3d.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.4048
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-                    st.write("The 3d-Mortality ist predicted with 0.81 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
-                    #st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
-
-                if pred == 1:
-                    #y_pred = self.cohort2_model_3d.predict(X_test_full)
-
-
-                    y_pred_proba = self.cohort2_model_3d.predict_proba(X_test_full)[:, 1]
-                    optimal_threshold = 0.8712
-                    y_pred = (y_pred_proba >= optimal_threshold).astype(int)
-
-                    st.write("The 3d-Mortality ist predicted with 0.34 ROC AUC (Accuracy)")
-                    st.write("Mortality prediction for the next 3 days:", y_pred[0])
-                    #st.write("Mortality probability  for the next 3 days:", y_pred_proba[0])
-
-
-            return y_pred, y_pred_proba
-        
-        
         def predict(self, df_input):
             """
-            Führt Vorhersagen für jeden Tag mit den entsprechenden Modellen durch und bestimmt,
-            ob die Vorhersage in die gut oder schlecht vorhersagbare Kohorte fällt.
-
+            Führt Vorhersagen für jeden Tag mit den entsprechenden Modellen durch und gibt die AUC ROC-Werte 
+            für jede Kohorte aus, die aus einem externen Dictionary entnommen werden.
+            
             Args:
                 df_input (DataFrame): Eingabedaten mit den gleichen Features wie beim Training.
-                optimal_thresholds (dict): Dictionary mit optimalen Schwellenwerten pro Tag.
-                                        Schlüssel sind die Tagesnummern, Werte sind die Schwellenwerte.
+                auc_roc_dict (dict): Dictionary mit AUC ROC-Werten für die Kohorten. 
+                                    Beispiel: {1: {'Gute Kohorte': 0.85, 'Schlechte Kohorte': 0.72}, ...}
 
             Returns:
-                DataFrame: Tabelle mit Vorhersagen, Wahrscheinlichkeiten und Kohorteninformationen.
+                DataFrame: Tabelle mit Vorhersagen, Wahrscheinlichkeiten und AUC ROC Werten.
             """
             
             results = []
@@ -384,7 +297,6 @@ if uploaded_file is not None:
                 final_model = model_data['model']
                 outlier_model = model_data['outlier_model']
                 scaler = model_data['scaler']
-            
 
                 # Extrahiere den optimalen Schwellenwert für den aktuellen Tag
                 optimal_threshold = self.optimal_thresholds.get(day, 0.5)  # Standardwert 0.5, falls nicht vorhanden
@@ -394,29 +306,114 @@ if uploaded_file is not None:
 
                 # Prädiziere die Outlier-Kohorte
                 outliers = outlier_model.predict(df_scaled)
-                cohort = 'Gute Kohorte' if outliers[0] == 0 else 'Schlechte Kohorte'
+                cohort = 'Good_predictable' if outliers[0] == 0 else 'Bad_predictable'
 
                 # Prädiziere die Wahrscheinlichkeit der positiven Klasse
                 pred_proba = final_model.predict_proba(df_scaled)[:, 1]
                 prediction = (pred_proba >= optimal_threshold).astype(int)
 
-                # Speichere das Ergebnis
+                # Hole die AUC-Werte aus dem Dictionary für die aktuelle Kohorte
+                auc_value = self.auc_roc_dict.get(day, {}).get(cohort, np.nan)  # Standardwert NaN, falls nicht vorhanden
+
+                # Speichere das Ergebnis mit AUC-Wert anstelle von Kohorte
                 results.append({
                     "Day": f"Day {day}",
                     "Mortality_Probability": pred_proba[0],
                     "Prediction": prediction[0],
-                    "subgroup": cohort
+                    "Subgroup" : cohort,
+                    "AUC": auc_value  # AUC-Wert statt Kohorte
                 })
 
             # Ergebnisse als DataFrame darstellen
             results_df = pd.DataFrame(results)
-            
             st.write("## Prädiktionsergebnisse für jeden Tag")
             st.table(results_df)
 
             return results_df
 
 
+
+        
+        
+
+        # Function to create a SHAP waterfall plot
+        def plot_shap_waterfall(self, df_input):
+            
+            st.write('### SHAP-explanations for 24hours_mortality prediction')
+
+            # Create SHAP explainer and values
+            for index, pred in enumerate(df_input.index):
+                
+                explainer = shap.TreeExplainer(self.p_model_24h)
+
+                # Compute SHAP values
+                shap_values = explainer(df_input.iloc[[index]])  # Obtain an Explanation object
+
+                # Plot SHAP waterfall plot
+                shap.initjs()
+                plt.figure(figsize=(10, 6))
+                shap.waterfall_plot(shap_values[0], max_display=10)  # Display only top features
+
+                # Save plot to an in-memory buffer instead of disk
+                buffer = io.BytesIO()
+                plt.savefig(buffer, format='png', bbox_inches='tight')
+                buffer.seek(0)
+
+                # Display the image in Streamlit directly from memory
+                st.image(buffer)
+
+                # Close the plot to avoid memory leaks
+                plt.close()
+                
+                
+            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+                
+            st.write('### SHAP-explanations for 15d_mortality prediction')
+
+            # Create SHAP explainer and values
+            for index, pred in enumerate(df_input.index):
+                
+                explainer = shap.TreeExplainer(self.p_model_15d)
+
+                # Compute SHAP values
+                shap_values = explainer(df_input.iloc[[index]])  # Obtain an Explanation object
+
+                # Plot SHAP waterfall plot
+                shap.initjs()
+                plt.figure(figsize=(10, 6))
+                shap.waterfall_plot(shap_values[0], max_display=10)  # Display only top features
+
+                # Save plot to an in-memory buffer instead of disk
+                buffer = io.BytesIO()
+                plt.savefig(buffer, format='png', bbox_inches='tight')
+                buffer.seek(0)
+
+                # Display the image in Streamlit directly from memory
+                st.image(buffer)
+
+                # Close the plot to avoid memory leaks
+                plt.close()
+                
+                
+                
+            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+
+            # Display SHAP explanation
+            st.write("""
+            ### How to Read the SHAP Waterfall Plot:
+            
+            - **Baseline**: The baseline represents the average predicted value.
+            - **Positive Values (Red)**: Features that increase the predicted value (towards mortality).
+            - **Negative Values (Blue)**: Features that decrease the predicted value (towards survival).
+            - **Arrows**: Indicate how much each feature contributes to the prediction.
+            
+            The waterfall plot helps you understand which features have the most significant impact on the prediction.
+            """)
+                
+                
+            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+            
+            
         
         def generate_counterfactuals(self, X_test, total_CFs=5, desired_class=0, features_to_vary=None, permitted_range=None):
             if features_to_vary is None:
@@ -449,114 +446,6 @@ if uploaded_file is not None:
                     result_df = pd.DataFrame(result_df)
 
             return result_df
-        
-        
-
-        # Function to create a SHAP waterfall plot
-        def plot_shap_waterfall(self, X_test):
-            
-            st.write('### SHAP-explanations for 24hours_mortality prediction')
-
-            # Preprocess the test data
-            df = self.scaler.transform(X_test)
-            df = pd.DataFrame(df, columns=[
-                'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
-                'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
-                'PC21', 'PC22'
-            ])
-
-            # Predict using the model
-            y_pred_t_model = self.t_model.predict(df)
-            y_pred_t_model = pd.Series(y_pred_t_model)
-            y_pred_t_model.index = X_test.index
-
-            # Create SHAP explainer and values
-            for index, pred in enumerate(y_pred_t_model):
-                if pred == 0:
-                    explainer = shap.TreeExplainer(self.cohort1_model)
-                else:  # Assuming it's binary classification, hence the `else` for pred == 1
-                    explainer = shap.TreeExplainer(self.cohort2_model)
-
-                # Compute SHAP values
-                shap_values = explainer(X_test.iloc[[index]])  # Obtain an Explanation object
-
-                # Plot SHAP waterfall plot
-                shap.initjs()
-                plt.figure(figsize=(10, 6))
-                shap.waterfall_plot(shap_values[0], max_display=10)  # Display only top features
-
-                # Save plot to an in-memory buffer instead of disk
-                buffer = io.BytesIO()
-                plt.savefig(buffer, format='png', bbox_inches='tight')
-                buffer.seek(0)
-
-                # Display the image in Streamlit directly from memory
-                st.image(buffer)
-
-                # Close the plot to avoid memory leaks
-                plt.close()
-                
-                
-                #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
-                
-            st.write('### SHAP-explanations for 3days_mortality prediction')
-                
-            # Preprocess the test data
-            df = self.scaler.transform(X_test)
-            df = pd.DataFrame(df, columns=[
-                'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10',
-                'PC11', 'PC12', 'PC13', 'PC14', 'PC15', 'PC16', 'PC17', 'PC18', 'PC19', 'PC20',
-                'PC21', 'PC22'
-            ])
-
-            # Predict using the model
-            y_pred_t_model = self.t_model_3d.predict(df)
-            y_pred_t_model = pd.Series(y_pred_t_model)
-            y_pred_t_model.index = X_test.index
-
-            # Create SHAP explainer and values
-            for index, pred in enumerate(y_pred_t_model):
-                if pred == 0:
-                    explainer = shap.TreeExplainer(self.cohort1_model_3d)
-                else:  # Assuming it's binary classification, hence the `else` for pred == 1
-                    explainer = shap.TreeExplainer(self.cohort2_model_3d)
-
-                # Compute SHAP values
-                shap_values = explainer(X_test.iloc[[index]])  # Obtain an Explanation object
-
-                # Plot SHAP waterfall plot
-                shap.initjs()
-                plt.figure(figsize=(10, 6))
-                shap.waterfall_plot(shap_values[0], max_display=10)  # Display only top features
-
-                # Save plot to an in-memory buffer instead of disk
-                buffer = io.BytesIO()
-                plt.savefig(buffer, format='png', bbox_inches='tight')
-                buffer.seek(0)
-
-                # Display the image in Streamlit directly from memory
-                st.image(buffer)
-
-                # Close the plot to avoid memory leaks
-                plt.close()
-                
-                
-            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
-
-            # Display SHAP explanation
-            st.write("""
-            ### How to Read the SHAP Waterfall Plot:
-            
-            - **Baseline**: The baseline represents the average predicted value.
-            - **Positive Values (Red)**: Features that increase the predicted value (towards mortality).
-            - **Negative Values (Blue)**: Features that decrease the predicted value (towards survival).
-            - **Arrows**: Indicate how much each feature contributes to the prediction.
-            
-            The waterfall plot helps you understand which features have the most significant impact on the prediction.
-            """)
-                
-                
-            #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
 
 
