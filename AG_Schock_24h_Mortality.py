@@ -339,18 +339,22 @@ if uploaded_file is not None:
             # Ausgabe der größten AUC Vorhersage mit Nachricht
             if best_auc != -np.inf:
                 if best_prediction == 1:
-                    prediction_text = "The patient is most likely to die."
+                    prediction_text = "The patient is most likely to die"
                 else:
-                    prediction_text = "The patient is most likely to survive."
+                    prediction_text = "The patient is most likely to survive"
 
                 st.markdown(f"### Most Likely Outcome for the Patient")
-                st.markdown(f"**Prediction: {prediction_text} on the {best_day}. day (AUC: {best_auc:.2f})**")
+                st.markdown(f"**Prediction: {prediction_text} on {best_day}. (AUC: {best_auc:.2f})**")
 
             # Button für detaillierte Ergebnisse
             if st.button("Show Detailed Results"):
                 results_df = pd.DataFrame(results)
                 st.write("## Detailed Predictions for each day:")
                 st.table(results_df)
+                
+                st.header("**How to interprete the results:**")
+                st.write("**Prediction Value = 1** indicates that the patient is predicted to be **deceased**.")
+                st.write("**Prediction Value = 0** indicates that the patient is predicted to be **alive**.")
 
             return results_df
 
@@ -1093,14 +1097,9 @@ if uploaded_file is not None:
                 
                 weighted_means_df = st.session_state['weighted_means_df']
                 #print(weighted_means_df)
-                prediction,prediction_proba = model.predict(weighted_means_df)
+                results_df = model.predict(weighted_means_df)
                 #prediction_proba = model.predict_proba(weighted_means_df)
                 #print(prediction, prediction_proba)
-                
-                st.header("**How to interprete the results:**")
-                
-                st.write("**Prediction Value = 1** indicates that the patient is predicted to be **deceased**.")
-                st.write("**Prediction Value = 0** indicates that the patient is predicted to be **alive**.")
                 #st.write("**Cohort 1** corresponds to predictions with **high accuracy**.")
                 #st.write("**Cohort 2** corresponds to predictions with **lower accuracy**.")
             else:
