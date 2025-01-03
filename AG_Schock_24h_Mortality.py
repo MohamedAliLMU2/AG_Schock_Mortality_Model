@@ -317,7 +317,7 @@ if uploaded_file is not None:
 
                 # Speichere das Ergebnis mit AUC-Wert anstelle von Kohorte
                 results.append({
-                    "Day": f"day {day}",
+                    "Day": f"{day}",
                     "Mortality_Probability": pred_proba[0],
                     "Prediction": prediction[0],
                     "Subgroup" : cohort,
@@ -340,12 +340,15 @@ if uploaded_file is not None:
             if best_auc != -np.inf:
                 if best_prediction == 1:
                     prediction_text = "The patient is most likely to decease"
+                    st.markdown(f"<h2 style='text-align: center;'>{prediction_text} in {best_day} days (AUC: {best_auc:.2f})</h2>", unsafe_allow_html=True)
+
                 else:
                     prediction_text = "The patient is most likely to survive"
+                    st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till day {best_day} (AUC: {best_auc:.2f})</h2>", unsafe_allow_html=True)
+
                     
                 # Große, auffällige Schrift mit Markdown und HTML
                 #st.header("**Most Likely Outcome for the Patient:**")
-                st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till {best_day} (AUC: {best_auc:.2f})</h2>", unsafe_allow_html=True)
 
 
             # Button für detaillierte Ergebnisse
