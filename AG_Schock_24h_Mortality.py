@@ -345,7 +345,7 @@ if uploaded_file is not None:
                     
                 # Große, auffällige Schrift mit Markdown und HTML
                 #st.header("**Most Likely Outcome for the Patient:**")
-                st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till {best_day} (AUC: {best_auc:.2f}).</h2>", unsafe_allow_html=True)
+                st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till {best_day} (AUC: {best_auc:.2f})</h2>", unsafe_allow_html=True)
 
 
             # Button für detaillierte Ergebnisse
@@ -1077,7 +1077,7 @@ if uploaded_file is not None:
             #if 'data_formatted' in st.session_state:
             # Vorhersage durchführen
             if 'weighted_means_df' in st.session_state:
-                st.header("**Results**")
+                #st.header("**Results**")
                 
                 weighted_means_df = st.session_state['weighted_means_df']
                 #print(weighted_means_df)
