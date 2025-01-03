@@ -339,13 +339,13 @@ if uploaded_file is not None:
             # Ausgabe der größten AUC Vorhersage mit Nachricht
             if best_auc != -np.inf:
                 if best_prediction == 1:
-                    prediction_text = "The patient is most likely to die"
+                    prediction_text = "The patient is most likely to decease"
                 else:
                     prediction_text = "The patient is most likely to survive"
                     
                 # Große, auffällige Schrift mit Markdown und HTML
-                st.markdown(f"<h1 style='text-align: center;'>Most Likely Outcome for the Patient</h1>", unsafe_allow_html=True)
-                st.markdown(f"<h2 style='text-align: center;'>**Prediction: {prediction_text} on {best_day} (AUC: {best_auc:.2f}).**</h2>", unsafe_allow_html=True)
+                st.markdown(f"<h1 style='text-align: left;'>Most Likely Outcome for the Patient</h1>", unsafe_allow_html=True)
+                st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till {best_day} (AUC: {best_auc:.2f}).</h2>", unsafe_allow_html=True)
 
 
             # Button für detaillierte Ergebnisse
