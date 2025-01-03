@@ -433,9 +433,9 @@ if uploaded_file is not None:
 
             # Iteriere über alle Tage, für die ein Modell existiert
             for day in range(1, 16):
-                model_key = f"final_model_{day}d"  # Name des Modells
-                scaler_key = f"scaler_{day}d"      # Name des Scalers
-                outlier_model_key = f"p_model_{day}d"  # Outlier-Erkennungsmodell
+                model_key = self.f"final_model_{day}d"  # Name des Modells
+                scaler_key = self.f"scaler_{day}d"      # Name des Scalers
+                outlier_model_key = self.f"p_model_{day}d"  # Outlier-Erkennungsmodell
 
                 # Überprüfe, ob das Modell für diesen Tag existiert
                 if not hasattr(self, model_key):
