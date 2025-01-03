@@ -1128,31 +1128,33 @@ if uploaded_file is not None:
 
         # Mapping von technischen Namen zu verständlichen Bezeichnungen
         feature_names = {
+            'AgeOnInclusion': 'Age at Inclusion',
             'RRSysWeightedMeanValue': 'Systolic Blood Pressure',
             'RRDiaWeightedMeanValue': 'Diastolic Blood Pressure',
             'sO2WeightedMeanValue': 'Oxygen Saturation',
-            'TempWeightedMean': 'Body Temperature',
             'PHWeightedMean': 'Blood pH',
             'LactateWeightedMean': 'Blood Lactate Level',
             'gluWeightedMean': 'Blood Glucose Level',
             'HCO3WeightedMean': 'Bicarbonate (HCO3)',
+            'CreatinineWeightedMean': 'Creatinine Level',
+            'DayNumber': 'Day Number',
             'PO2WeightedMean': 'Partial Pressure of Oxygen (PaO2)',
             'PCO2WeightedMean': 'Partial Pressure of Carbon Dioxide (PaCO2)',
             'HBWeightedMean': 'Hemoglobin (HB)',
-            'leucoWeightedMean': 'Leukocytes',
             'ureaWeightedMean': 'Blood Urea',
             'HRWeightedMean': 'Heart Rate',
+            'TempWeightedMean': 'Body Temperature',
             'NaWeightedMean': 'Sodium (Na+)',
             'KWeightedMean': 'Potassium (K+)',
             'ClWeightedMean': 'Chloride (Cl-)',
-            'plateletsWeightedMean': 'Platelets',
-            'AgeOnInclusion': 'Age at Inclusion',
-            'DayNumber': 'Day Number',
             'Height': 'Height (cm)',
             'Weight': 'Weight (kg)',
+            'plateletsWeightedMean': 'Platelets',
             'HighestLactate': 'Highest Lactate Level',
-            'LowestpH': 'Lowest Blood pH'
+            'LowestpH': 'Lowest Blood pH',
+            'leucoWeightedMean': 'Leukocytes'
         }
+
 
 
         # Umgekehrtes Mapping, um später wieder auf die technischen Namen zuzugreifen
