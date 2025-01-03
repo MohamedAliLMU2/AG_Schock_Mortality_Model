@@ -49,42 +49,159 @@ if uploaded_file is not None:
     try:
         with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
             # Load each model directly from the zip file into memory
-            with zip_ref.open('pca_model_1.pkl') as file:
-                t_model = pickle.load(file)
-            
-            with zip_ref.open('pca_model_2.pkl') as file:
-                cohort1_model = pickle.load(file)
-    
-            with zip_ref.open('pca_scaler.pkl') as file:
-                scaler = pickle.load(file)
-    
-            with zip_ref.open('pca_model_cohrot_2.pkl') as file:  # corrected typo
-                cohort2_model = pickle.load(file)
-    
-            with zip_ref.open('pca_model_exp1.pkl') as file:
-                exp1 = pickle.load(file)
-    
-            with zip_ref.open('pca_model_exp2.pkl') as file:
-                exp2 = pickle.load(file)
-                
-                
-            with zip_ref.open('pca_model_1_3d.pkl') as file:
-                t_model_3d = pickle.load(file)
-            
-            with zip_ref.open('pca_model_2_3d.pkl') as file:
-                cohort1_model_3d = pickle.load(file)
-    
-            with zip_ref.open('pca_scaler_3d.pkl') as file:
+            # Load s_models
+            with zip_ref.open('s_model_24h.pkl') as file:
+                s_model_24h = pickle.load(file)
+
+            with zip_ref.open('s_model_2d.pkl') as file:
+                s_model_2d = pickle.load(file)
+
+            with zip_ref.open('s_model_3d.pkl') as file:
+                s_model_3d = pickle.load(file)
+
+            with zip_ref.open('s_model_4d.pkl') as file:
+                s_model_4d = pickle.load(file)
+
+            with zip_ref.open('s_model_5d.pkl') as file:
+                s_model_5d = pickle.load(file)
+
+            with zip_ref.open('s_model_6d.pkl') as file:
+                s_model_6d = pickle.load(file)
+
+            with zip_ref.open('s_model_1w.pkl') as file:
+                s_model_1w = pickle.load(file)
+
+            with zip_ref.open('s_model_8d.pkl') as file:
+                s_model_8d = pickle.load(file)
+
+            with zip_ref.open('s_model_9d.pkl') as file:
+                s_model_9d = pickle.load(file)
+
+            with zip_ref.open('s_model_10d.pkl') as file:
+                s_model_10d = pickle.load(file)
+
+            with zip_ref.open('s_model_11d.pkl') as file:
+                s_model_11d = pickle.load(file)
+
+            with zip_ref.open('s_model_12d.pkl') as file:
+                s_model_12d = pickle.load(file)
+
+            with zip_ref.open('s_model_13d.pkl') as file:
+                s_model_13d = pickle.load(file)
+
+            with zip_ref.open('s_model_2w.pkl') as file:
+                s_model_2w = pickle.load(file)
+
+            with zip_ref.open('s_model_15d.pkl') as file:
+                s_model_15d = pickle.load(file)
+
+            with zip_ref.open('s_model_3w.pkl') as file:
+                s_model_3w = pickle.load(file)
+
+            # Load p_models
+            with zip_ref.open('p_model_24h.pkl') as file:
+                p_model_24h = pickle.load(file)
+
+            with zip_ref.open('p_model_2d.pkl') as file:
+                p_model_2d = pickle.load(file)
+
+            with zip_ref.open('p_model_3d.pkl') as file:
+                p_model_3d = pickle.load(file)
+
+            with zip_ref.open('p_model_4d.pkl') as file:
+                p_model_4d = pickle.load(file)
+
+            with zip_ref.open('p_model_5d.pkl') as file:
+                p_model_5d = pickle.load(file)
+
+            with zip_ref.open('p_model_6d.pkl') as file:
+                p_model_6d = pickle.load(file)
+
+            with zip_ref.open('p_model_1w.pkl') as file:
+                p_model_1w = pickle.load(file)
+
+            with zip_ref.open('p_model_8d.pkl') as file:
+                p_model_8d = pickle.load(file)
+
+            with zip_ref.open('p_model_9d.pkl') as file:
+                p_model_9d = pickle.load(file)
+
+            with zip_ref.open('p_model_10d.pkl') as file:
+                p_model_10d = pickle.load(file)
+
+            with zip_ref.open('p_model_11d.pkl') as file:
+                p_model_11d = pickle.load(file)
+
+            with zip_ref.open('p_model_12d.pkl') as file:
+                p_model_12d = pickle.load(file)
+
+            with zip_ref.open('p_model_13d.pkl') as file:
+                p_model_13d = pickle.load(file)
+
+            with zip_ref.open('p_model_2w.pkl') as file:
+                p_model_2w = pickle.load(file)
+
+            with zip_ref.open('p_model_15d.pkl') as file:
+                p_model_15d = pickle.load(file)
+
+            with zip_ref.open('p_model_3w.pkl') as file:
+                p_model_3w = pickle.load(file)
+
+            # Load scalers
+            with zip_ref.open('scaler_24h.pkl') as file:
+                scaler_24h = pickle.load(file)
+
+            with zip_ref.open('scaler_2d.pkl') as file:
+                scaler_2d = pickle.load(file)
+
+            with zip_ref.open('scaler_3d.pkl') as file:
                 scaler_3d = pickle.load(file)
-    
-            with zip_ref.open('pca_model_cohrot_2_3d.pkl') as file:  # corrected typo
-                cohort2_model_3d = pickle.load(file)
-    
-            with zip_ref.open('pca_model_exp1_3d.pkl') as file:
-                exp1_3d = pickle.load(file)
-    
-            with zip_ref.open('pca_model_exp2_3d.pkl') as file:
-                exp2_3d = pickle.load(file)
+
+            with zip_ref.open('scaler_4d.pkl') as file:
+                scaler_4d = pickle.load(file)
+
+            with zip_ref.open('scaler_5d.pkl') as file:
+                scaler_5d = pickle.load(file)
+
+            with zip_ref.open('scaler_6d.pkl') as file:
+                scaler_6d = pickle.load(file)
+
+            with zip_ref.open('scaler_1w.pkl') as file:
+                scaler_1w = pickle.load(file)
+
+            with zip_ref.open('scaler_8d.pkl') as file:
+                scaler_8d = pickle.load(file)
+
+            with zip_ref.open('scaler_9d.pkl') as file:
+                scaler_9d = pickle.load(file)
+
+            with zip_ref.open('scaler_10d.pkl') as file:
+                scaler_10d = pickle.load(file)
+
+            with zip_ref.open('scaler_11d.pkl') as file:
+                scaler_11d = pickle.load(file)
+
+            with zip_ref.open('scaler_12d.pkl') as file:
+                scaler_12d = pickle.load(file)
+
+            with zip_ref.open('scaler_13d.pkl') as file:
+                scaler_13d = pickle.load(file)
+
+            with zip_ref.open('scaler_2w.pkl') as file:
+                scaler_2w = pickle.load(file)
+
+            with zip_ref.open('scaler_15d.pkl') as file:
+                scaler_15d = pickle.load(file)
+
+            with zip_ref.open('scaler_3w.pkl') as file:
+                scaler_3w = pickle.load(file)
+            
+            with zip_ref.open('exp_dice.pkl') as file:
+                exp_dice = pickle.load(file)    
+                        
+            with zip_ref.open('optimal_thresholds.pkl') as file:
+                optimal_thresholds = pickle.load(file)
+
     
         st.success("Models loaded successfully!")
     
@@ -99,21 +216,111 @@ if uploaded_file is not None:
     
                 
     class model_24h_mortality:
-        def __init__(self, t_model=t_model, cohort1_model=cohort1_model, scaler=scaler, cohort2_model=cohort2_model, exp_dice1=exp1, exp_dice2=exp2,
-                     t_model_3d=t_model_3d, cohort1_model_3d=cohort1_model_3d, scaler_3d=scaler_3d, cohort2_model_3d=cohort2_model_3d, exp_dice1_3d=exp1_3d, exp_dice2_3d=exp2_3d):
-            self.t_model = t_model
-            self.cohort1_model = cohort1_model
-            self.scaler = scaler
-            self.cohort2_model = cohort2_model
-            self.exp1 = exp_dice1
-            self.exp2 = exp_dice2
-            
-            self.t_model_3d = t_model_3d
-            self.cohort1_model_3d = cohort1_model_3d
+        def __init__(self, 
+                    s_model_24h=s_model_24h, p_model_24h=p_model_24h, scaler_24h=scaler_24h,
+                    s_model_2d=s_model_2d, p_model_2d=p_model_2d, scaler_2d=scaler_2d,
+                    s_model_3d=s_model_3d, p_model_3d=p_model_3d, scaler_3d=scaler_3d,
+                    s_model_4d=s_model_4d, p_model_4d=p_model_4d, scaler_4d=scaler_4d,
+                    s_model_5d=s_model_5d, p_model_5d=p_model_5d, scaler_5d=scaler_5d,
+                    s_model_6d=s_model_6d, p_model_6d=p_model_6d, scaler_6d=scaler_6d,
+                    s_model_1w=s_model_1w, p_model_1w=p_model_1w, scaler_1w=scaler_1w,
+                    s_model_8d=s_model_8d, p_model_8d=p_model_8d, scaler_8d=scaler_8d,
+                    s_model_9d=s_model_9d, p_model_9d=p_model_9d, scaler_9d=scaler_9d,
+                    s_model_10d=s_model_10d, p_model_10d=p_model_10d, scaler_10d=scaler_10d,
+                    s_model_11d=s_model_11d, p_model_11d=p_model_11d, scaler_11d=scaler_11d,
+                    s_model_12d=s_model_12d, p_model_12d=p_model_12d, scaler_12d=scaler_12d,
+                    s_model_13d=s_model_13d, p_model_13d=p_model_13d, scaler_13d=scaler_13d,
+                    s_model_2w=s_model_2w, p_model_2w=p_model_2w, scaler_2w=scaler_2w,
+                    s_model_15d=s_model_15d, p_model_15d=p_model_15d, scaler_15d=scaler_15d,
+                    s_model_3w=s_model_3w, p_model_3w=p_model_3w, scaler_3w=scaler_3w,
+                    optimal_thresholds=optimal_thresholds, exp_dice=exp_dice):
+
+            # 24h Modelle
+            self.s_model_24h = s_model_24h
+            self.p_model_24h = p_model_24h
+            self.scaler_24h = scaler_24h
+
+            # 2D Modelle
+            self.s_model_2d = s_model_2d
+            self.p_model_2d = p_model_2d
+            self.scaler_2d = scaler_2d
+
+            # 3D Modelle
+            self.s_model_3d = s_model_3d
+            self.p_model_3d = p_model_3d
             self.scaler_3d = scaler_3d
-            self.cohort2_model_3d = cohort2_model_3d
-            self.exp1_3d = exp_dice1_3d
-            self.exp2_3d = exp_dice2_3d
+
+            # 4D Modelle
+            self.s_model_4d = s_model_4d
+            self.p_model_4d = p_model_4d
+            self.scaler_4d = scaler_4d
+
+            # 5D Modelle
+            self.s_model_5d = s_model_5d
+            self.p_model_5d = p_model_5d
+            self.scaler_5d = scaler_5d
+
+            # 6D Modelle
+            self.s_model_6d = s_model_6d
+            self.p_model_6d = p_model_6d
+            self.scaler_6d = scaler_6d
+
+            # 1W Modelle
+            self.s_model_1w = s_model_1w
+            self.p_model_1w = p_model_1w
+            self.scaler_1w = scaler_1w
+
+            # 8D Modelle
+            self.s_model_8d = s_model_8d
+            self.p_model_8d = p_model_8d
+            self.scaler_8d = scaler_8d
+
+            # 9D Modelle
+            self.s_model_9d = s_model_9d
+            self.p_model_9d = p_model_9d
+            self.scaler_9d = scaler_9d
+
+            # 10D Modelle
+            self.s_model_10d = s_model_10d
+            self.p_model_10d = p_model_10d
+            self.scaler_10d = scaler_10d
+
+            # 11D Modelle
+            self.s_model_11d = s_model_11d
+            self.p_model_11d = p_model_11d
+            self.scaler_11d = scaler_11d
+
+            # 12D Modelle
+            self.s_model_12d = s_model_12d
+            self.p_model_12d = p_model_12d
+            self.scaler_12d = scaler_12d
+
+            # 13D Modelle
+            self.s_model_13d = s_model_13d
+            self.p_model_13d = p_model_13d
+            self.scaler_13d = scaler_13d
+
+            # 2W Modelle
+            self.s_model_2w = s_model_2w
+            self.p_model_2w = p_model_2w
+            self.scaler_2w = scaler_2w
+
+            # 15D Modelle
+            self.s_model_15d = s_model_15d
+            self.p_model_15d = p_model_15d
+            self.scaler_15d = scaler_15d
+
+            # 3W Modelle
+            self.s_model_3w = s_model_3w
+            self.p_model_3w = p_model_3w
+            self.scaler_3w = scaler_3w
+
+            # Experiment-Dice Modell
+            self.optimal_thresholds = optimal_thresholds
+            self.exp_dice = exp_dice
+            
+
+
 
         def predict(self, X_test_full):
             
@@ -206,6 +413,70 @@ if uploaded_file is not None:
 
 
             return y_pred, y_pred_proba
+        
+        
+        def predict(self, df_input):
+            """
+            Führt Vorhersagen für jeden Tag mit den entsprechenden Modellen durch und bestimmt,
+            ob die Vorhersage in die gut oder schlecht vorhersagbare Kohorte fällt.
+
+            Args:
+                df_input (DataFrame): Eingabedaten mit den gleichen Features wie beim Training.
+                optimal_thresholds (dict): Dictionary mit optimalen Schwellenwerten pro Tag.
+                                        Schlüssel sind die Tagesnummern, Werte sind die Schwellenwerte.
+
+            Returns:
+                DataFrame: Tabelle mit Vorhersagen, Wahrscheinlichkeiten und Kohorteninformationen.
+            """
+            
+            results = []
+
+            # Iteriere über alle Tage, für die ein Modell existiert
+            for day in range(1, 16):
+                model_key = f"final_model_{day}d"  # Name des Modells
+                scaler_key = f"scaler_{day}d"      # Name des Scalers
+                outlier_model_key = f"p_model_{day}d"  # Outlier-Erkennungsmodell
+
+                # Überprüfe, ob das Modell für diesen Tag existiert
+                if not hasattr(self, model_key):
+                    st.warning(f"Kein Modell für Tag {day} gefunden.")
+                    continue
+
+                # Extrahiere den optimalen Schwellenwert für den aktuellen Tag
+                optimal_threshold = self.optimal_thresholds.get(day, 0.5)  # Standardwert 0.5, falls nicht vorhanden
+
+                # Hole das Tagesmodell und den zugehörigen Scaler
+                final_model = getattr(self, model_key)
+                scaler = getattr(self, scaler_key)
+                outlier_model = getattr(self, outlier_model_key)
+
+                # Skaliere die Eingabedaten
+                df_scaled = scaler.transform(df_input)
+
+                # Prädiziere die Outlier-Kohorte
+                outliers = outlier_model.predict(df_scaled)
+                cohort = 'Gute Kohorte' if outliers[0] == 0 else 'Schlechte Kohorte'
+
+                # Prädiziere die Wahrscheinlichkeit der positiven Klasse
+                pred_proba = final_model.predict_proba(df_scaled)[:, 1]
+                prediction = (pred_proba >= optimal_threshold).astype(int)
+
+                # Speichere das Ergebnis
+                results.append({
+                    "Day": f"Day {day}",
+                    "Mortality_Probability": pred_proba[0],
+                    "Prediction": prediction[0],
+                    "subgroup": cohort
+                })
+
+            # Ergebnisse als DataFrame darstellen
+            results_df = pd.DataFrame(results)
+            
+            st.write("## Prädiktionsergebnisse für jeden Tag")
+            st.table(results_df)
+
+            return results_df
+
 
         
         def generate_counterfactuals(self, X_test, total_CFs=5, desired_class=0, features_to_vary=None, permitted_range=None):
