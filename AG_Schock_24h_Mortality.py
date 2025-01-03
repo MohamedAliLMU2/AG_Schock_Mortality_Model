@@ -344,8 +344,7 @@ if uploaded_file is not None:
                     prediction_text = "The patient is most likely to survive."
 
                 st.markdown(f"### Most Likely Outcome for the Patient")
-                st.markdown(f"**Prediction: {prediction_text}**")
-                st.markdown(f"**Day with highest AUC: {best_day} (AUC: {best_auc:.2f})**")
+                st.markdown(f"**Prediction: {prediction_text} on the {best_day}. day (AUC: {best_auc:.2f})**")
 
             # Button für detaillierte Ergebnisse
             if st.button("Show Detailed Results"):
