@@ -938,8 +938,9 @@ if uploaded_file is not None:
 
                 
                 # Index in eine reguläre Spalte umwandeln
+                #editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
+                editable_df = pd.DataFrame(editable_df.values, columns=['Feature'] + editable_df.columns[1:].tolist())
                 editable_df = editable_df.reset_index()
-                editable_df.columns = ['Feature'] + editable_df.columns[1:].tolist()
 
             
 
