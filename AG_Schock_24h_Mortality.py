@@ -963,7 +963,8 @@ if uploaded_file is not None:
             
             if Input_modify == "no": 
 
-                thanks = "thanks"
+                editable_df = editable_df.set_index('Feature')
+                st.session_state['values'] = editable_df
                 
             
             # Erstelle ein DataFrame mit den importierten Werten
