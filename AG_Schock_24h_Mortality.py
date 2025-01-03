@@ -223,97 +223,17 @@ if uploaded_file is not None:
                     s_model_4d=s_model_4d, p_model_4d=p_model_4d, scaler_4d=scaler_4d,
                     s_model_5d=s_model_5d, p_model_5d=p_model_5d, scaler_5d=scaler_5d,
                     s_model_6d=s_model_6d, p_model_6d=p_model_6d, scaler_6d=scaler_6d,
-                    s_model_1w=s_model_1w, p_model_1w=p_model_1w, scaler_1w=scaler_1w,
+                    s_model_7d=s_model_1w, p_model_7d=p_model_1w, scaler_7d=scaler_1w,
                     s_model_8d=s_model_8d, p_model_8d=p_model_8d, scaler_8d=scaler_8d,
                     s_model_9d=s_model_9d, p_model_9d=p_model_9d, scaler_9d=scaler_9d,
                     s_model_10d=s_model_10d, p_model_10d=p_model_10d, scaler_10d=scaler_10d,
                     s_model_11d=s_model_11d, p_model_11d=p_model_11d, scaler_11d=scaler_11d,
                     s_model_12d=s_model_12d, p_model_12d=p_model_12d, scaler_12d=scaler_12d,
                     s_model_13d=s_model_13d, p_model_13d=p_model_13d, scaler_13d=scaler_13d,
-                    s_model_2w=s_model_2w, p_model_2w=p_model_2w, scaler_2w=scaler_2w,
+                    s_model_14d=s_model_2w, p_model_14d=p_model_2w, scaler_14d=scaler_2w,
                     s_model_15d=s_model_15d, p_model_15d=p_model_15d, scaler_15d=scaler_15d,
                     s_model_3w=s_model_3w, p_model_3w=p_model_3w, scaler_3w=scaler_3w,
                     optimal_thresholds=optimal_thresholds, exp_dice=exp_dice):
-
-            # 24h Modelle
-            self.s_model_24h = s_model_24h
-            self.p_model_24h = p_model_24h
-            self.scaler_24h = scaler_24h
-
-            # 2D Modelle
-            self.s_model_2d = s_model_2d
-            self.p_model_2d = p_model_2d
-            self.scaler_2d = scaler_2d
-
-            # 3D Modelle
-            self.s_model_3d = s_model_3d
-            self.p_model_3d = p_model_3d
-            self.scaler_3d = scaler_3d
-
-            # 4D Modelle
-            self.s_model_4d = s_model_4d
-            self.p_model_4d = p_model_4d
-            self.scaler_4d = scaler_4d
-
-            # 5D Modelle
-            self.s_model_5d = s_model_5d
-            self.p_model_5d = p_model_5d
-            self.scaler_5d = scaler_5d
-
-            # 6D Modelle
-            self.s_model_6d = s_model_6d
-            self.p_model_6d = p_model_6d
-            self.scaler_6d = scaler_6d
-
-            # 1W Modelle
-            self.s_model_1w = s_model_1w
-            self.p_model_1w = p_model_1w
-            self.scaler_1w = scaler_1w
-
-            # 8D Modelle
-            self.s_model_8d = s_model_8d
-            self.p_model_8d = p_model_8d
-            self.scaler_8d = scaler_8d
-
-            # 9D Modelle
-            self.s_model_9d = s_model_9d
-            self.p_model_9d = p_model_9d
-            self.scaler_9d = scaler_9d
-
-            # 10D Modelle
-            self.s_model_10d = s_model_10d
-            self.p_model_10d = p_model_10d
-            self.scaler_10d = scaler_10d
-
-            # 11D Modelle
-            self.s_model_11d = s_model_11d
-            self.p_model_11d = p_model_11d
-            self.scaler_11d = scaler_11d
-
-            # 12D Modelle
-            self.s_model_12d = s_model_12d
-            self.p_model_12d = p_model_12d
-            self.scaler_12d = scaler_12d
-
-            # 13D Modelle
-            self.s_model_13d = s_model_13d
-            self.p_model_13d = p_model_13d
-            self.scaler_13d = scaler_13d
-
-            # 2W Modelle
-            self.s_model_2w = s_model_2w
-            self.p_model_2w = p_model_2w
-            self.scaler_2w = scaler_2w
-
-            # 15D Modelle
-            self.s_model_15d = s_model_15d
-            self.p_model_15d = p_model_15d
-            self.scaler_15d = scaler_15d
-
-            # 3W Modelle
-            self.s_model_3w = s_model_3w
-            self.p_model_3w = p_model_3w
-            self.scaler_3w = scaler_3w
             
             # Speichern der Modelle und Schwellenwerte für spätere Verwendung
             self.models = {
@@ -323,14 +243,14 @@ if uploaded_file is not None:
                 4: {'model': s_model_4d, 'outlier_model': p_model_4d, 'scaler': scaler_4d},
                 5: {'model': s_model_5d, 'outlier_model': p_model_5d, 'scaler': scaler_5d},
                 6: {'model': s_model_6d, 'outlier_model': p_model_6d, 'scaler': scaler_6d},
-                1: {'model': s_model_1w, 'outlier_model': p_model_1w, 'scaler': scaler_1w},
+                1: {'model': s_model_7d, 'outlier_model': p_model_7d, 'scaler': scaler_7d},
                 8: {'model': s_model_8d, 'outlier_model': p_model_8d, 'scaler': scaler_8d},
                 9: {'model': s_model_9d, 'outlier_model': p_model_9d, 'scaler': scaler_9d},
                 10: {'model': s_model_10d, 'outlier_model': p_model_10d, 'scaler': scaler_10d},
                 11: {'model': s_model_11d, 'outlier_model': p_model_11d, 'scaler': scaler_11d},
                 12: {'model': s_model_12d, 'outlier_model': p_model_12d, 'scaler': scaler_12d},
                 13: {'model': s_model_13d, 'outlier_model': p_model_13d, 'scaler': scaler_13d},
-                2: {'model': s_model_2w, 'outlier_model': p_model_2w, 'scaler': scaler_2w},
+                2: {'model': s_model_14d, 'outlier_model': p_model_14d, 'scaler': scaler_14d},
                 15: {'model': s_model_15d, 'outlier_model': p_model_15d, 'scaler': scaler_15d},
                 3: {'model': s_model_3w, 'outlier_model': p_model_3w, 'scaler': scaler_3w}
             }
