@@ -342,19 +342,20 @@ if uploaded_file is not None:
                     prediction_text = "The patient is most likely to die"
                 else:
                     prediction_text = "The patient is most likely to survive"
+                    
+                    # Große, auffällige Schrift mit Markdown und HTML
+                    st.markdown(f"<h1 style='text-align: center;'>Most Likely Outcome for the Patient</h1>", unsafe_allow_html=True)
+                    st.markdown(f"<h2 style='text-align: center;'>**Prediction: {prediction_text} on {best_day} (AUC: {best_auc:.2f}).**</h2>", unsafe_allow_html=True)
 
-                st.markdown(f"### Most Likely Outcome for the Patient")
-                st.markdown(f"**Prediction: {prediction_text} on {best_day} (AUC: {best_auc:.2f}).**")
 
             # Button für detaillierte Ergebnisse
-            if st.button("Show Detailed Results"):
-                results_df = pd.DataFrame(results)
-                st.write("## Detailed Predictions for each day:")
-                st.table(results_df)
-                
-                st.header("**How to interprete the results:**")
-                st.write("**Prediction Value = 1** indicates that the patient is predicted to be **deceased**.")
-                st.write("**Prediction Value = 0** indicates that the patient is predicted to be **alive**.")
+            results_df = pd.DataFrame(results)
+            st.write("## Detailed Predictions for each day:")
+            st.table(results_df)
+            
+            st.header("**How to interprete the results:**")
+            st.write("**Prediction Value = 1** indicates that the patient is predicted to be **deceased**.")
+            st.write("**Prediction Value = 0** indicates that the patient is predicted to be **alive**.")
 
             
 
