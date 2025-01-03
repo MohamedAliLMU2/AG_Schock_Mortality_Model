@@ -344,7 +344,7 @@ if uploaded_file is not None:
                     prediction_text = "The patient is most likely to survive"
                     
                 # Große, auffällige Schrift mit Markdown und HTML
-                st.markdown(f"<h1 style='text-align: left;'>Most Likely Outcome for the Patient</h1>", unsafe_allow_html=True)
+                st.header("**Most Likely Outcome for the Patient:**")
                 st.markdown(f"<h2 style='text-align: center;'>{prediction_text} till {best_day} (AUC: {best_auc:.2f}).</h2>", unsafe_allow_html=True)
 
 
