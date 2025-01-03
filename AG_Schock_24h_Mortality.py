@@ -314,6 +314,27 @@ if uploaded_file is not None:
             self.s_model_3w = s_model_3w
             self.p_model_3w = p_model_3w
             self.scaler_3w = scaler_3w
+            
+            # Speichern der Modelle und Schwellenwerte für spätere Verwendung
+            self.models = {
+                24: {'model': s_model_24h, 'outlier_model': p_model_24h, 'scaler': scaler_24h},
+                2: {'model': s_model_2d, 'outlier_model': p_model_2d, 'scaler': scaler_2d},
+                3: {'model': s_model_3d, 'outlier_model': p_model_3d, 'scaler': scaler_3d},
+                4: {'model': s_model_4d, 'outlier_model': p_model_4d, 'scaler': scaler_4d},
+                5: {'model': s_model_5d, 'outlier_model': p_model_5d, 'scaler': scaler_5d},
+                6: {'model': s_model_6d, 'outlier_model': p_model_6d, 'scaler': scaler_6d},
+                1: {'model': s_model_1w, 'outlier_model': p_model_1w, 'scaler': scaler_1w},
+                8: {'model': s_model_8d, 'outlier_model': p_model_8d, 'scaler': scaler_8d},
+                9: {'model': s_model_9d, 'outlier_model': p_model_9d, 'scaler': scaler_9d},
+                10: {'model': s_model_10d, 'outlier_model': p_model_10d, 'scaler': scaler_10d},
+                11: {'model': s_model_11d, 'outlier_model': p_model_11d, 'scaler': scaler_11d},
+                12: {'model': s_model_12d, 'outlier_model': p_model_12d, 'scaler': scaler_12d},
+                13: {'model': s_model_13d, 'outlier_model': p_model_13d, 'scaler': scaler_13d},
+                2: {'model': s_model_2w, 'outlier_model': p_model_2w, 'scaler': scaler_2w},
+                15: {'model': s_model_15d, 'outlier_model': p_model_15d, 'scaler': scaler_15d},
+                3: {'model': s_model_3w, 'outlier_model': p_model_3w, 'scaler': scaler_3w}
+            }
+
 
             # Experiment-Dice Modell
             self.optimal_thresholds = optimal_thresholds
@@ -433,22 +454,20 @@ if uploaded_file is not None:
 
             # Iteriere über alle Tage, für die ein Modell existiert
             for day in range(1, 16):
-                model_key = self.f"final_model_{day}d"  # Name des Modells
-                scaler_key = self.f"scaler_{day}d"      # Name des Scalers
-                outlier_model_key = self.f"p_model_{day}d"  # Outlier-Erkennungsmodell
-
-                # Überprüfe, ob das Modell für diesen Tag existiert
-                if not hasattr(self, model_key):
+                
+                model_data = self.models.get(day)
+                if not model_data:
                     st.warning(f"Kein Modell für Tag {day} gefunden.")
                     continue
+                
+                # Extrahiere das Modell, den Outlier-Erkennungsmodell und den Scaler
+                final_model = model_data['model']
+                outlier_model = model_data['outlier_model']
+                scaler = model_data['scaler']
+            
 
                 # Extrahiere den optimalen Schwellenwert für den aktuellen Tag
                 optimal_threshold = self.optimal_thresholds.get(day, 0.5)  # Standardwert 0.5, falls nicht vorhanden
-
-                # Hole das Tagesmodell und den zugehörigen Scaler
-                final_model = getattr(self, model_key)
-                scaler = getattr(self, scaler_key)
-                outlier_model = getattr(self, outlier_model_key)
 
                 # Skaliere die Eingabedaten
                 df_scaled = scaler.transform(df_input)
