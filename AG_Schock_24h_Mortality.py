@@ -323,11 +323,35 @@ if uploaded_file is not None:
                     "Subgroup" : cohort,
                     "AUC": auc_value  # AUC-Wert statt Kohorte
                 })
+                
+            # Suche den Tag mit dem höchsten AUC-Wert
+            best_day = None
+            best_auc = -np.inf
+            best_prediction = None
 
-            # Ergebnisse als DataFrame darstellen
-            results_df = pd.DataFrame(results)
-            st.write("## Prädiktionsergebnisse für jeden Tag")
-            st.table(results_df)
+            for result in results:
+                if result['AUC'] > best_auc:
+                    best_auc = result['AUC']
+                    best_day = result['Day']
+                    best_prediction = result['Prediction']
+                    best_cohort = result['Subgroup']
+            
+            # Ausgabe der größten AUC Vorhersage mit Nachricht
+            if best_auc != -np.inf:
+                if best_prediction == 1:
+                    prediction_text = "The patient is most likely to die."
+                else:
+                    prediction_text = "The patient is most likely to survive."
+
+                st.markdown(f"### Most Likely Outcome for the Patient")
+                st.markdown(f"**Prediction: {prediction_text}**")
+                st.markdown(f"**Day with highest AUC: {best_day} (AUC: {best_auc:.2f})**")
+
+            # Button für detaillierte Ergebnisse
+            if st.button("Show Detailed Results"):
+                results_df = pd.DataFrame(results)
+                st.write("## Detailed Predictions for each day:")
+                st.table(results_df)
 
             return results_df
 
