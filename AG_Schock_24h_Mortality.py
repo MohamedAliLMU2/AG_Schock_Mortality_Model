@@ -309,7 +309,7 @@ if uploaded_file is not None:
                 cohort = 'Good_predictable' if outliers[0] == 0 else 'Bad_predictable'
 
                 # Prädiziere die Wahrscheinlichkeit der positiven Klasse
-                pred_proba = final_model.predict_proba(df_scaled)[:, 1]
+                pred_proba = final_model.predict_proba(df_input)[:, 1]
                 prediction = (pred_proba >= optimal_threshold).astype(int)
 
                 # Hole die AUC-Werte aus dem Dictionary für die aktuelle Kohorte
