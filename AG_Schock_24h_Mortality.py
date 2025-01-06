@@ -300,6 +300,7 @@ if uploaded_file is not None:
 
                 # Extrahiere den optimalen Schwellenwert für den aktuellen Tag
                 optimal_threshold = self.optimal_thresholds.get(day, 0.5)  # Standardwert 0.5, falls nicht vorhanden
+                optimal_threshold = 0.5
 
                 # Skaliere die Eingabedaten
                 df_scaled = scaler.transform(df_input)
