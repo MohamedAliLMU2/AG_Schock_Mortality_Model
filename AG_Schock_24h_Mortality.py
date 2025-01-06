@@ -1016,12 +1016,12 @@ if uploaded_file is not None:
             
 
                 # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                edited_df = st.data_editor(weighted_means_df, use_container_width=True, hide_index=True, )#num_rows="dynamic"
+                edited_df = st.data_editor(weighted_means_df.T, use_container_width=True, hide_index=True, )#num_rows="dynamic"
 
                 #edited_df = edited_df.set_index('Feature')
                 
                 # Speichere die bearbeiteten Daten zurück in den Session State
-                st.session_state['values'] = edited_df
+                st.session_state['values'] = edited_df.T
                         
 
 
@@ -1038,7 +1038,7 @@ if uploaded_file is not None:
 
             # Ergebnis für das Modell vorbereiten
             st.write("Berechnete Werte, die ans Modell geschickt werden:")
-            st.write(weighted_means_df.T)
+            st.write(st.session_state['values'].T)
 
             col_names = [
                             'AgeOnInclusion', 'RRSysWeightedMeanValue', 
