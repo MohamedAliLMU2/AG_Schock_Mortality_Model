@@ -313,10 +313,12 @@ if uploaded_file is not None:
 
                 # Prädiziere die Wahrscheinlichkeit der positiven Klasse
                 pred_proba = final_model.predict_proba(df_input)[:, 1]
+                pred_proba =  round(pred_proba, 2)
                 prediction = (pred_proba >= optimal_threshold).astype(int)
 
                 # Hole die AUC-Werte aus dem Dictionary für die aktuelle Kohorte
                 auc_value = self.auc_roc_dict.get(day, {}).get(cohort, np.nan)  # Standardwert NaN, falls nicht vorhanden
+                auc_value = round(auc_value, 2)
 
                 # Speichere das Ergebnis mit AUC-Wert anstelle von Kohorte
                 results.append({
