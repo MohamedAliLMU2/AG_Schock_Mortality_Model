@@ -240,22 +240,22 @@ if uploaded_file is not None:
             
             # Speichern der Modelle und Schwellenwerte für spätere Verwendung
             self.models = {
-                1: {'model': s_model_24h, 'outlier_model': p_model_24h, 'scaler': scaler_24h},
-                2: {'model': s_model_2d, 'outlier_model': p_model_2d, 'scaler': scaler_2d},
-                3: {'model': s_model_3d, 'outlier_model': p_model_3d, 'scaler': scaler_3d},
-                4: {'model': s_model_4d, 'outlier_model': p_model_4d, 'scaler': scaler_4d},
-                5: {'model': s_model_5d, 'outlier_model': p_model_5d, 'scaler': scaler_5d},
-                6: {'model': s_model_6d, 'outlier_model': p_model_6d, 'scaler': scaler_6d},
-                7: {'model': s_model_7d, 'outlier_model': p_model_7d, 'scaler': scaler_7d},
-                8: {'model': s_model_8d, 'outlier_model': p_model_8d, 'scaler': scaler_8d},
-                9: {'model': s_model_9d, 'outlier_model': p_model_9d, 'scaler': scaler_9d},
-                10: {'model': s_model_10d, 'outlier_model': p_model_10d, 'scaler': scaler_10d},
-                11: {'model': s_model_11d, 'outlier_model': p_model_11d, 'scaler': scaler_11d},
-                12: {'model': s_model_12d, 'outlier_model': p_model_12d, 'scaler': scaler_12d},
-                13: {'model': s_model_13d, 'outlier_model': p_model_13d, 'scaler': scaler_13d},
-                14: {'model': s_model_14d, 'outlier_model': p_model_14d, 'scaler': scaler_14d},
-                15: {'model': s_model_15d, 'outlier_model': p_model_15d, 'scaler': scaler_15d},
-                21: {'model': s_model_3w, 'outlier_model': p_model_3w, 'scaler': scaler_3w}
+                1: {'model': p_model_24h, 'outlier_model': s_model_24h, 'scaler': scaler_24h},
+                2: {'model': p_model_2d, 'outlier_model': s_model_2d, 'scaler': scaler_2d},
+                3: {'model': p_model_3d, 'outlier_model': s_model_3d, 'scaler': scaler_3d},
+                4: {'model': p_model_4d, 'outlier_model': s_model_4d, 'scaler': scaler_4d},
+                5: {'model': p_model_5d, 'outlier_model': s_model_5d, 'scaler': scaler_5d},
+                6: {'model': p_model_6d, 'outlier_model': s_model_6d, 'scaler': scaler_6d},
+                7: {'model': p_model_7d, 'outlier_model': s_model_7d, 'scaler': scaler_7d},
+                8: {'model': p_model_8d, 'outlier_model': s_model_8d, 'scaler': scaler_8d},
+                9: {'model': p_model_9d, 'outlier_model': s_model_9d, 'scaler': scaler_9d},
+                10: {'model': p_model_10d, 'outlier_model': s_model_10d, 'scaler': scaler_10d},
+                11: {'model': p_model_11d, 'outlier_model': s_model_11d, 'scaler': scaler_11d},
+                12: {'model': p_model_12d, 'outlier_model': s_model_12d, 'scaler': scaler_12d},
+                13: {'model': p_model_13d, 'outlier_model': s_model_13d, 'scaler': scaler_13d},
+                14: {'model': p_model_14d, 'outlier_model': s_model_14d, 'scaler': scaler_14d},
+                15: {'model': p_model_15d, 'outlier_model': s_model_15d, 'scaler': scaler_15d},
+                21: {'model': p_model_3w, 'outlier_model': s_model_3w, 'scaler': scaler_3w}
             }
             
             self.p_model_24h = p_model_24h
@@ -1210,7 +1210,7 @@ if uploaded_file is not None:
                 #st.header("**Results**")
                 
                 weighted_means_df = st.session_state['weighted_means_df']
-                st.write(weighted_means_df)
+                #st.write(weighted_means_df)
                 model.predict(weighted_means_df)
                 #prediction_proba = model.predict_proba(weighted_means_df)
                 #print(prediction, prediction_proba)
