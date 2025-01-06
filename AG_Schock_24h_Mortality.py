@@ -1210,7 +1210,7 @@ if uploaded_file is not None:
                 #st.header("**Results**")
                 
                 weighted_means_df = st.session_state['weighted_means_df']
-                print(weighted_means_df)
+                st.write(weighted_means_df)
                 model.predict(weighted_means_df)
                 #prediction_proba = model.predict_proba(weighted_means_df)
                 #print(prediction, prediction_proba)
