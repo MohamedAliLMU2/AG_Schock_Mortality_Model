@@ -313,7 +313,7 @@ if uploaded_file is not None:
 
                 # Prädiziere die Wahrscheinlichkeit der positiven Klasse
                 pred_proba = final_model.predict_proba(df_input)[:, 1]
-                pred_proba =  np.around(pred_proba, decimals=2)
+                pred_proba[0] =  np.around(pred_proba[0], decimals=2)
                 prediction = (pred_proba >= optimal_threshold).astype(int)
 
                 # Hole die AUC-Werte aus dem Dictionary für die aktuelle Kohorte
