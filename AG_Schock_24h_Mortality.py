@@ -983,7 +983,7 @@ if uploaded_file is not None:
                     editable_df.loc[col] = None
 
 
-            weighted_means_df = calculate_weighted_means(st.session_state['values']).T
+            weighted_means_df = calculate_weighted_means(editable_df).T
             weighted_means_df = weighted_means_df[features_names_Weighted_mean]
             weighted_means_df = weighted_means_df.astype(float)
 
