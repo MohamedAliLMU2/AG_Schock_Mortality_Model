@@ -1021,7 +1021,7 @@ if uploaded_file is not None:
                 #edited_df = edited_df.set_index('Feature')
                 
                 # Speichere die bearbeiteten Daten zurück in den Session State
-                st.session_state['values'] = edited_df.T
+                st.session_state['weighted_means_df'] = edited_df.T
                         
 
 
@@ -1032,29 +1032,18 @@ if uploaded_file is not None:
             if Input_modify == "no": 
 
                 #editable_df = editable_df.set_index('Feature')
-                st.session_state['values'] = weighted_means_df
+                st.session_state['weighted_means_df'] = weighted_means_df
                 
             
 
             # Ergebnis für das Modell vorbereiten
             st.write("Berechnete Werte, die ans Modell geschickt werden:")
-            st.write(st.session_state['values'].T)
+            st.write(st.session_state['weighted_means_df'].T)
 
-            col_names = [
-                            'AgeOnInclusion', 'RRSysWeightedMeanValue', 
-                            'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
-                            'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
-                            'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
-                            'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
-                            'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
-                            'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
-                            'HighestLactate', 'LowestpH', 'leucoWeightedMean'
-                        ]
-            
-            weighted_means_df = weighted_means_df[col_names]
+
 
                     # Speichern in Session State
-            st.session_state['weighted_means_df'] = weighted_means_df
+            #st.session_state['weighted_means_df'] = st.session_state['values']
             st.session_state['data_formatted'] = True
 
             
