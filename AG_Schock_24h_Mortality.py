@@ -941,34 +941,9 @@ if uploaded_file is not None:
             editable_df = pd.DataFrame(editable_df.values, columns=['Feature'] + editable_df.columns[1:].tolist())
 
 
-            Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
-            if Input_modify == "yes": 
-            
-
-            
-
-                # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                edited_df = st.data_editor(editable_df, use_container_width=True, hide_index=True, )#num_rows="dynamic"
-
-                edited_df = edited_df.set_index('Feature')
-                
-                # Speichere die bearbeiteten Daten zurück in den Session State
-                st.session_state['values'] = edited_df
-                        
-
-
-                        
-
-
-            
-            if Input_modify == "no": 
-
-                editable_df = editable_df.set_index('Feature')
-                st.session_state['values'] = editable_df
-                
-            
             # Erstelle ein DataFrame mit den importierten Werten
-            editable_df = st.session_state['values'].copy()
+            #editable_df = st.session_state['values'].copy()
+            editable_df = editable_df.set_index('Feature')
 
             features_names = [
                                 'AgeOnInclusion', 'RRSysWeightedMeanValue', 
@@ -1033,6 +1008,33 @@ if uploaded_file is not None:
             weighted_means_df['LowestpH']  = lowest_df['LowestpH'] 
             weighted_means_df = weighted_means_df.astype(float)
             #weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+
+            Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
+            if Input_modify == "yes": 
+            
+
+            
+
+                # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
+                edited_df = st.data_editor(weighted_means_df, use_container_width=True, hide_index=True, )#num_rows="dynamic"
+
+                #edited_df = edited_df.set_index('Feature')
+                
+                # Speichere die bearbeiteten Daten zurück in den Session State
+                st.session_state['values'] = edited_df
+                        
+
+
+                        
+
+
+            
+            if Input_modify == "no": 
+
+                #editable_df = editable_df.set_index('Feature')
+                st.session_state['values'] = weighted_means_df
+                
+            
 
             # Ergebnis für das Modell vorbereiten
             st.write("Berechnete Werte, die ans Modell geschickt werden:")
