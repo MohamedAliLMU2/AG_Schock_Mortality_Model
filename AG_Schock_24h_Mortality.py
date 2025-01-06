@@ -304,9 +304,11 @@ if uploaded_file is not None:
 
                 # Skaliere die Eingabedaten
                 df_scaled = scaler.transform(df_input)
+                df_scaled = pd.DataFrame(df_scaled, columns=df_input.columns.tolist())
 
                 # Prädiziere die Outlier-Kohorte
                 outliers = outlier_model.predict(df_scaled)
+                st.write(outliers[0])
                 cohort = 'Good_predictable' if outliers[0] == 0 else 'Bad_predictable'
 
                 # Prädiziere die Wahrscheinlichkeit der positiven Klasse
