@@ -1031,7 +1031,7 @@ if uploaded_file is not None:
             
 
                 # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-                edited_df = st.data_editor(weighted_means_df.T, use_container_width=True, hide_index=False, )#num_rows="dynamic"
+                edited_df = st.data_editor(weighted_means_df.T,  hide_index=False, )#use_container_width=True,num_rows="dynamic"
 
                 #edited_df = edited_df.set_index('Feature')
                 
