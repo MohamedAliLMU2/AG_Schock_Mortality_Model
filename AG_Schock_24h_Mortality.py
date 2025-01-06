@@ -1008,7 +1008,22 @@ if uploaded_file is not None:
             weighted_means_df['LowestpH']  = lowest_df['LowestpH'] 
             weighted_means_df = weighted_means_df.astype(float)
             #weighted_means_df = pd.concat([weighted_means_df, highest_df, lowest_df], axis = 0)
+            #st.write(st.session_state['values'].T)
+            
+            col_names = [
+                            'AgeOnInclusion', 'RRSysWeightedMeanValue', 
+                            'RRDiaWeightedMeanValue', 'sO2WeightedMeanValue', 'PHWeightedMean',
+                            'LactateWeightedMean', 'gluWeightedMean', 'HCO3WeightedMean',
+                            'CreatinineWeightedMean', 'DayNumber', 'PO2WeightedMean',
+                            'PCO2WeightedMean', 'HBWeightedMean', 'ureaWeightedMean',
+                            'HRWeightedMean', 'TempWeightedMean', 'NaWeightedMean', 'KWeightedMean',
+                            'ClWeightedMean', 'Height', 'Weight', 'plateletsWeightedMean',
+                            'HighestLactate', 'LowestpH', 'leucoWeightedMean'
+                        ]
+            
+            weighted_means_df = weighted_means_df[col_names]
 
+            
             Input_modify = st.radio("Do you want to change the imported data?", ("no", "yes"))
             if Input_modify == "yes": 
             
@@ -1046,14 +1061,14 @@ if uploaded_file is not None:
             #st.session_state['weighted_means_df'] = st.session_state['values']
             st.session_state['data_formatted'] = True
 
-            
+
 
 
             # Stelle eine interaktive Tabelle bereit, in der der Benutzer die Werte ändern kann
-            edited_df = editable_df.copy()
+            #edited_df = editable_df.copy()
             
             # Speichere die bearbeiteten Daten zurück in den Session State
-            st.session_state['values'] = edited_df
+            st.session_state['values'] = editable_df
                     
 
 
