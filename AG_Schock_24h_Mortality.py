@@ -323,7 +323,7 @@ if uploaded_file is not None:
                 # Speichere das Ergebnis mit AUC-Wert anstelle von Kohorte
                 results.append({
                     "Day": f"{day}",
-                    "Mortality_Probability": pred_proba#[0],
+                    "Mortality_Probability": pred_proba,#[0],
                     "Prediction": prediction[0],
                     "Subgroup" : cohort,
                     "AUC": auc_value  # AUC-Wert statt Kohorte
