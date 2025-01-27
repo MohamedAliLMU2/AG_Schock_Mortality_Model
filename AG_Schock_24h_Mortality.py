@@ -1057,7 +1057,7 @@ if uploaded_file is not None:
             
 
             # Ergebnis für das Modell vorbereiten
-            st.write("Berechnete Werte, die ans Modell geschickt werden:")
+            st.write("Calculated values that will be sent to the model:")
             st.write(st.session_state['weighted_means_df'].T)
 
 
