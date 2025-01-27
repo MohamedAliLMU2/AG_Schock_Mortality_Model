@@ -672,7 +672,7 @@ if uploaded_file is not None:
                             for col in time_columns:
                                 cell_value = str(row[col]).strip()
                                 if cell_value == '' or pd.isna(row[col]):  # Überprüfen auf leere Zellen oder NaN-Werte
-                                    values.append(None)  # Füge `None` hinzu, um leere Zellen zu repräsentieren
+                                    values.append(None)  # Füge `None` hinzu, um leere Zellen zu repräieren
                                 else:
                                     cell_value = re.sub(r',', '.', cell_value)
                                     value_match = re.findall(r'(-?\d+\.?\d*)', cell_value)
@@ -1057,7 +1057,7 @@ if uploaded_file is not None:
             
 
             # Ergebnis für das Modell vorbereiten
-            st.write("Calculated values that will be sent to the model:")
+            st.write("Calculated values that will be sent to the models:")
             st.write(st.session_state['weighted_means_df'].T)
 
 
