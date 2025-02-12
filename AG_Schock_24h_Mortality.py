@@ -26,9 +26,11 @@ st.title("AG Schock Mortality Modell")
 
 st.markdown(
     """
-    The model has been pre-trained on data from cardiogenic shock patients, specifically those classified as SCAI stage C or higher.
-    
-    ### Inclusion criteria:
+    This website and its pre-trained model are designed exclusively for scientific research and should be used only for the prospective validation of the models. Any application of this tool for predicting patient mortality in real-world clinical settings or for guiding medical interventions is strictly prohibited. The authors assume no responsibility for any decisions, actions, or consequences resulting from the use or misuse of this model. Users acknowledge that this tool is not a substitute for professional medical judgment and should not be relied upon for clinical decision-making.    
+
+    The models have been pre-trained on data from cardiogenic shock patients, specifically those classified as SCAI stage C or higher.
+
+    ### Simplified inclusion criteria:
 
     - Lactate levels greater than 2 mmol/L
     - Administration of vasopressors
