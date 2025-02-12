@@ -39,11 +39,11 @@ st.markdown("""
 
     **By accessing or using this tool, you expressly acknowledge and agree to the following:**
 
-    ### ⚠️ No Medical Advice or Clinical Use  
+    ### No Medical Advice or Clinical Use  
     - This tool **does not** provide medical advice and **must not** be relied upon for predicting patient mortality, diagnosing conditions, or guiding medical interventions.  
     - It is **not** a substitute for professional medical judgment, clinical expertise, or regulatory-approved medical devices.  
 
-    ### ⚖️ Limitation of Liability  
+    ### Limitation of Liability  
     - The authors, developers, and affiliated institutions assume **no responsibility** for any decisions, actions, outcomes, or consequences—direct or indirect—arising from the use or misuse of this tool.  
     - **Under no circumstances** shall the authors be liable for any damages, including but not limited to:  
       - Medical malpractice claims  
@@ -51,15 +51,15 @@ st.markdown("""
       - Loss of data  
       - Incidental or consequential damages  
 
-    ### 🚨 Regulatory Compliance  
+    ### Regulatory Compliance  
     - This tool is **not** FDA-approved, CE-marked, or certified under any regulatory body as a medical device.  
     - It is developed **strictly for research purposes** and **must not** be deployed in clinical settings or used for patient care.  
 
-    ### 🔍 User Acknowledgment and Assumption of Risk  
+    ### User Acknowledgment and Assumption of Risk  
     - By using this tool, you confirm that you understand and accept these limitations.  
     - Any **unauthorized or improper** use of this tool is **at your own risk**, and the developers **disclaim all liability** associated with such use.  
 
-    ### ⚖️ Jurisdiction and Governing Law  
+    ### Jurisdiction and Governing Law  
     - Any disputes arising from the use of this tool shall be governed by the laws of **[Your Jurisdiction]**, without regard to conflict of law principles.  
 
     ---
