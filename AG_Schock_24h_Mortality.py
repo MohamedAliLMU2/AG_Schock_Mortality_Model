@@ -59,9 +59,6 @@ st.markdown("""
     - By using this tool, you confirm that you understand and accept these limitations.  
     - Any **unauthorized or improper** use of this tool is **at your own risk**, and the developers **disclaim all liability** associated with such use.  
 
-    ### Jurisdiction and Governing Law  
-    - Any disputes arising from the use of this tool shall be governed by the laws of **[Your Jurisdiction]**, without regard to conflict of law principles.  
-
     ---
     **By checking the box below and clicking "Continue," you acknowledge that you have read, understood, and agreed to this disclaimer.**
 """)
